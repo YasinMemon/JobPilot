@@ -1,5 +1,7 @@
 import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
+import { customSession } from "better-auth/plugins";
+
 import clientPromise from "./mongodb";
 
 const client = await clientPromise;
@@ -9,6 +11,16 @@ export const auth = betterAuth({
   database: mongodbAdapter(db, {
     client: client,
   }),
+
+  user: {
+    additionalFields: {
+      role: {
+        type: "string",
+        defaultValue: "user",
+        input: false,
+      },
+    },
+  },
 
   emailAndPassword: {
     enabled: true,
@@ -40,6 +52,18 @@ export const auth = betterAuth({
       allowDifferentEmails: true,
     },
   },
+
+  plugins: [
+    customSession(async ({ user, session }) => {
+      return {
+        user: {
+          ...user,
+          role: user?.role ?? "user",
+        },
+        session,
+      };
+    }),
+  ],
 
   trustedOrigins: [process.env.BETTER_AUTH_URL!],
 

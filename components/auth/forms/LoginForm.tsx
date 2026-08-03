@@ -50,8 +50,21 @@ export default function LoginForm() {
       }
 
       if (response.data?.user) {
-        toast.success("Login successful! Redirecting to dashboard...");
-        router.push("/dashboard");
+        const adminCheckResponse = await fetch("/api/admin/isAdmin", {
+          credentials: "include",
+        });
+
+        if (!adminCheckResponse.ok) {
+          throw new Error("Failed to verify admin status");
+        }
+
+        const { isAdmin } = await adminCheckResponse.json();
+        toast.success("Login successful!");
+        if (isAdmin) {
+          router.push("/admin/dashboard");
+        } else {
+          router.push("/dashboard");
+        }
       }
     } catch (error) {
       console.error("Login error:", error);
