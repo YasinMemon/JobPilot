@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Globe, Mail, ShieldCheck } from "lucide-react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import AuthCard from "../AuthCard";
 import Input from "../Input";
@@ -20,6 +20,7 @@ export default function LoginForm() {
   const router = useRouter();
 
   const {
+    control,
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
@@ -30,7 +31,13 @@ export default function LoginForm() {
       email: "",
       password: "",
       rememberMe: false,
+      privacyPolicyAccepted: false,
     },
+  });
+
+  const privacyPolicyAccepted = useWatch({
+    control,
+    name: "privacyPolicyAccepted",
   });
 
   const onSubmit = handleSubmit(async (values) => {
@@ -76,13 +83,19 @@ export default function LoginForm() {
 
   const handleGoogleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+
+    if (!privacyPolicyAccepted) {
+      toast.error("Please accept the Privacy Policy to continue.");
+      return;
+    }
+
     setGoogleLoading(true);
 
     try {
       const { error } = await authClient.signIn.social(
         {
           provider: "google",
-          callbackURL: "/dashboard",
+          callbackURL: "/auth/google-callback",
         },
         {
           onError: (ctx) => {
@@ -157,6 +170,36 @@ export default function LoginForm() {
           >
             Forgot password?
           </Link>
+        </div>
+
+        <div className="space-y-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+          <label className="flex cursor-pointer items-start gap-3 text-sm leading-6 text-slate-200">
+            <input
+              type="checkbox"
+              className="mt-1 size-4 rounded border-white/20 bg-white/5 text-indigo-500 focus:ring-indigo-500"
+              {...register("privacyPolicyAccepted")}
+            />
+            <span>
+              I have read and accept the{" "}
+              <Link
+                href="/privacy-policy"
+                className="font-semibold text-indigo-300 transition hover:text-indigo-200"
+              >
+                Privacy Policy
+              </Link>
+              .
+            </span>
+          </label>
+
+          {errors.privacyPolicyAccepted ? (
+            <p className="text-xs font-medium text-rose-400">
+              {errors.privacyPolicyAccepted.message}
+            </p>
+          ) : (
+            <p className="text-xs leading-5 text-slate-400">
+              Required to continue with email sign-in or Google sign-in.
+            </p>
+          )}
         </div>
 
         <LoadingButton

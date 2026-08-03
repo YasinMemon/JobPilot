@@ -21,9 +21,9 @@ const navigation = {
   ],
   company: [
     { name: "About", href: "#" },
-    { name: "Contact", href: "#" },
-    { name: "Privacy Policy", href: "#" },
-    { name: "Terms of Service", href: "#" },
+    { name: "Contact", href: "/contact" },
+    { name: "Privacy Policy", href: "/privacy-policy" },
+    { name: "Terms of Service", href: "/terms" },
     { name: "Cookie Policy", href: "#" },
   ],
 };
@@ -160,13 +160,13 @@ export default function Footer() {
           </p>
           <div className="flex items-center gap-6">
             <Link
-              href="#"
+              href="/privacy-policy"
               className="text-gray-600 text-sm hover:text-gray-400 transition-colors"
             >
               Privacy Policy
             </Link>
             <Link
-              href="#"
+              href="/terms"
               className="text-gray-600 text-sm hover:text-gray-400 transition-colors"
             >
               Terms of Service

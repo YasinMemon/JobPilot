@@ -43,6 +43,9 @@ export const loginSchema = z.object({
     .min(1, "Password is required")
     .min(PASSWORD_MIN_LENGTH, `Password must be at least ${PASSWORD_MIN_LENGTH} characters`),
   rememberMe: z.boolean(),
+  privacyPolicyAccepted: z
+    .boolean()
+    .refine((value) => value, "Please accept the Privacy Policy to continue."),
 });
 
 export type LoginFormData = z.infer<typeof loginSchema>;
