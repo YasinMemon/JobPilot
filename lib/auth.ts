@@ -2,6 +2,7 @@ import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { customSession } from "better-auth/plugins";
 
+import type { AppRole } from "@/lib/auth/routeConfig";
 import clientPromise from "./mongodb";
 
 const client = await clientPromise;
@@ -55,10 +56,13 @@ export const auth = betterAuth({
 
   plugins: [
     customSession(async ({ user, session }) => {
+      const role: AppRole =
+        (user as { role?: AppRole }).role ?? "user";
+
       return {
         user: {
           ...user,
-          role: user?.role ?? "user",
+          role,
         },
         session,
       };
