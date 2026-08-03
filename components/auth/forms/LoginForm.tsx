@@ -95,7 +95,7 @@ export default function LoginForm() {
       const { error } = await authClient.signIn.social(
         {
           provider: "google",
-          callbackURL: "/auth/google-callback",
+          callbackURL: "/google-callback",
         },
         {
           onError: (ctx) => {
