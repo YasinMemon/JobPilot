@@ -34,7 +34,7 @@ export async function streamChatCompletion(params: {
     async start(controller) {
       try {
         const groqStream = await groq.chat.completions.create({
-          model: "llama-3.3-70b-versatile",
+          model: "qwen/qwen3.8-27b",
           messages: groqMessages as Parameters<typeof groq.chat.completions.create>[0]["messages"],
           temperature: 0.7,
           max_tokens: 2048,
@@ -76,7 +76,7 @@ export async function generateConversationTitle(
 ): Promise<string> {
   try {
     const completion = await groq.chat.completions.create({
-      model: "llama-3.3-70b-versatile",
+      model: "qwen/qwen3.8-27b",
       messages: [
         {
           role: "user",
@@ -213,7 +213,7 @@ Return ONLY valid JSON with "subject" and "html" fields. No markdown code fences
         `,
       },
     ],
-    model: "llama-3.3-70b-versatile",
+    model: "qwen/qwen3.8-27b",
     temperature: 0.7,
     response_format: { type: "json_object" },
   });

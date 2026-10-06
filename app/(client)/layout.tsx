@@ -10,7 +10,7 @@ export default function RootLayout({
 }>) {
   return (
     <ProtectedRoute>
-      <RoleGuard allowedRoles={["user"]}>
+      <RoleGuard allowedRoles={["user", "admin"]}>
         <div className="dark flex min-h-screen w-full bg-[#0a0a0a]">
           <DashboardSidebar />
           <ProfileCompletionProvider>

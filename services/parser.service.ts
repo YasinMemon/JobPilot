@@ -97,7 +97,7 @@ ${email.body.slice(0, 3000)}`;
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt },
       ],
-      model: "llama-3.3-70b-versatile",
+      model: "qwen/qwen3.8-27b",
       temperature: 0.1, // Low temperature for consistent structured output
       max_tokens: 800,
     });
