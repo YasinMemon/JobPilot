@@ -1,0 +1,8 @@
+- Read AGENTS.md first.
+- Inspect existing implementation in `models/`, `services/`, and `app/api/`.
+- Follow existing architecture. Don't invent new patterns.
+- Don't create unnecessary files. Don't duplicate logic.
+- Preserve UI consistency using existing Tailwind, Ant Design, and Shadcn UI configurations.
+- Use TypeScript strictly.
+- Validate API input and protect authentication via Better-Auth.
+- Don't modify unrelated files.
