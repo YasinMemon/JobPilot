@@ -121,13 +121,16 @@ export function RecentChats({ onSelectConversation, activeConversationId }: Rece
             const isActive = activeConversationId === conv._id;
 
             return (
-              <motion.button
+              <motion.div
                 key={conv._id}
                 initial={{ opacity: 0, x: 8 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.25, delay: i * 0.04 }}
                 onClick={() => onSelectConversation?.(conv._id)}
-                className={`group w-full text-left px-4 py-3 transition-all duration-150 hover:bg-[#161616] relative ${
+                onKeyDown={(e) => e.key === "Enter" && onSelectConversation?.(conv._id)}
+                role="button"
+                tabIndex={0}
+                className={`group w-full text-left px-4 py-3 transition-all duration-150 hover:bg-[#161616] relative cursor-pointer ${
                   isActive ? "bg-[#161616] border-l-2 border-indigo-500" : ""
                 }`}
               >
@@ -166,7 +169,7 @@ export function RecentChats({ onSelectConversation, activeConversationId }: Rece
                     </button>
                   </div>
                 </div>
-              </motion.button>
+              </motion.div>
             );
           })}
         </div>
