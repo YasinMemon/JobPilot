@@ -6,6 +6,7 @@ import {
   User,
   Settings,
   Bell,
+  FileText,
 } from "lucide-react";
 
 export const dashboardNav = [
@@ -28,6 +29,11 @@ export const dashboardNav = [
     title: "AI Assistant",
     href: "/dashboard/ai",
     icon: Bot,
+  },
+  {
+    title: "Resume Generator",
+    href: "/dashboard/resume",
+    icon: FileText,
   },
   // {
   //   title: "Notifications",
