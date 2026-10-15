@@ -186,6 +186,7 @@ export function useEmailComposer(): EmailComposerState {
   // ── Generate mail ───────────────────────────────────────────────────────────
 
   const handleGenerateMail = useCallback(async () => {
+    if (isGenerating) return;
     if (!jobDescription.trim()) {
       toast.error("Please paste a job description first.");
       return;
@@ -213,7 +214,7 @@ export function useEmailComposer(): EmailComposerState {
     } finally {
       setIsGenerating(false);
     }
-  }, [jobDescription, attachments]);
+  }, [jobDescription, attachments, isGenerating]);
 
   // ── Copy ────────────────────────────────────────────────────────────────────
 

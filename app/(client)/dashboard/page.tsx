@@ -64,6 +64,7 @@ const Dashboard = () => {
             jobDescription={composer.jobDescription}
             wordCount={composer.wordCount}
             charCount={composer.charCount}
+            isGenerating={composer.isGenerating}
             handleJobDescriptionChange={composer.handleJobDescriptionChange}
             handleClearJobDescription={composer.handleClearJobDescription}
             handleGenerateMail={composer.handleGenerateMail}
