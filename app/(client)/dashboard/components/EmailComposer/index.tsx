@@ -1,6 +1,6 @@
 "use client";
 
-import { FileText, Sparkles } from "lucide-react";
+import { FileText, Loader2, Sparkles } from "lucide-react";
 import type { EmailComposerState } from "../../types";
 
 type EmailComposerProps = Pick<
@@ -8,6 +8,7 @@ type EmailComposerProps = Pick<
   | "jobDescription"
   | "wordCount"
   | "charCount"
+  | "isGenerating"
   | "handleJobDescriptionChange"
   | "handleClearJobDescription"
   | "handleGenerateMail"
@@ -23,6 +24,7 @@ export function EmailComposer({
   jobDescription,
   wordCount,
   charCount,
+  isGenerating,
   handleJobDescriptionChange,
   handleClearJobDescription,
   handleGenerateMail,
@@ -71,14 +73,20 @@ export function EmailComposer({
       {/* Generate button */}
       <button
         onClick={handleGenerateMail}
-        disabled={!jobDescription.trim()}
-        className={`group relative flex w-full items-center justify-center gap-2.5 overflow-hidden rounded-xl px-5 py-3 text-[14px] font-semibold text-white transition-all duration-300 ${jobDescription.trim()
+        disabled={!jobDescription.trim() || isGenerating}
+        className={`group relative flex w-full items-center justify-center gap-2.5 overflow-hidden rounded-xl px-5 py-3 text-[14px] font-semibold text-white transition-all duration-300 ${jobDescription.trim() && !isGenerating
           ? "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 hover:shadow-lg hover:shadow-purple-900/25 hover:scale-[1.01] active:scale-[0.99]"
-          : "bg-[#1c1c1c] text-zinc-600 cursor-not-allowed"
+          : isGenerating
+            ? "bg-gradient-to-r from-blue-600/60 to-purple-600/60 cursor-not-allowed"
+            : "bg-[#1c1c1c] text-zinc-600 cursor-not-allowed"
           }`}
       >
-        <Sparkles className="h-4 w-4 transition-transform duration-300 group-hover:rotate-12" />
-        Generate Mail
+        {isGenerating ? (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        ) : (
+          <Sparkles className="h-4 w-4 transition-transform duration-300 group-hover:rotate-12" />
+        )}
+        {isGenerating ? "Generating..." : "Generate Mail"}
         <span className="absolute inset-0 -skew-x-12 bg-white/0 group-hover:bg-white/5 transition-all duration-500" />
       </button>
     </div>

@@ -34,9 +34,13 @@ async function getCurrentUser() {
 function parseDate(date?: string) {
   if (!date) return undefined;
 
-  const [day, month, year] = date.split("-");
+  // Legacy DD-MM-YYYY format
+  const legacy = /^(\d{2})-(\d{2})-(\d{4})$/.exec(date);
+  const parsed = legacy
+    ? new Date(`${legacy[3]}-${legacy[2]}-${legacy[1]}`)
+    : new Date(date); // YYYY-MM-DD (date input) or full ISO string
 
-  return new Date(`${year}-${month}-${day}`);
+  return isNaN(parsed.getTime()) ? undefined : parsed;
 }
 
 export async function GET() {

@@ -1,5 +1,6 @@
 import { User } from "@/types/user";
 import InfoCard from "../ui/InfoCard";
+import DatePicker from "@/components/ui/date-picker";
 
 export default function PersonalInfo({
   user,
@@ -56,16 +57,19 @@ export default function PersonalInfo({
                 } as User);
               }}
             />
-            <EditableField
-              label="Date of Birth"
-              value={user?.dateOfBirth || ""}
-              onChange={(newValue) => {
-                setProfile({
-                  ...user,
-                  dateOfBirth: newValue,
-                } as User);
-              }}
-            />
+            <div>
+              <p className="text-sm text-muted-foreground">Date of Birth</p>
+              <DatePicker
+                max={new Date().toISOString().split("T")[0]}
+                value={toDateInputValue(user?.dateOfBirth)}
+                onChange={(newValue) => {
+                  setProfile({
+                    ...user,
+                    dateOfBirth: newValue,
+                  } as User);
+                }}
+              />
+            </div>
             <EditableField
               label="Country"
               value={user?.country || ""}
@@ -88,7 +92,7 @@ export default function PersonalInfo({
             <Field label="Gender" value={user?.gender || "Not specified"} />
             <Field
               label="Date of Birth"
-              value={user?.dateOfBirth || "Not specified"}
+              value={formatDate(user?.dateOfBirth)}
             />
             <Field label="Country" value={user?.country || "Not specified"} />
           </>
@@ -96,6 +100,25 @@ export default function PersonalInfo({
       </div>
     </InfoCard>
   );
+}
+
+function toDateInputValue(value?: string) {
+  if (!value) return "";
+  const d = new Date(value);
+  return isNaN(d.getTime()) ? "" : d.toISOString().split("T")[0];
+}
+
+function formatDate(value?: string) {
+  if (!value) return "Not specified";
+  const d = new Date(value);
+  return isNaN(d.getTime())
+    ? value
+    : d.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        timeZone: "UTC",
+      });
 }
 
 function Field({ label, value }: { label: string; value: string }) {
