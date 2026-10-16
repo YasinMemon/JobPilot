@@ -1,4 +1,6 @@
-export const CONTACT_SUPPORT_EMAIL = "memonyasin2007@gmail.com";
+import { SUPPORT_EMAIL } from "./site-config";
+
+export const CONTACT_SUPPORT_EMAIL = SUPPORT_EMAIL;
 
 export const CONTACT_BUSINESS_HOURS = [
   "Monday - Friday",
@@ -191,7 +193,7 @@ export const PRIVACY_POLICY_SECTIONS = [
     ],
     contactLinks: [
       { label: "Contact Us", href: "/contact" },
-      { label: "Email support", href: "mailto:memonyasin2007@gmail.com" },
+      { label: "Email support", href: `mailto:${SUPPORT_EMAIL}` },
     ],
   },
 ] as {

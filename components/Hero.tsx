@@ -4,8 +4,6 @@ import { motion } from "framer-motion";
 import {
   Sparkles,
   ArrowRight,
-  Play,
-  Star,
   TrendingUp,
   Mail,
   BarChart3,
@@ -154,47 +152,18 @@ export default function Hero() {
                 Get Started Free
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
-              <button
-                id="hero-cta-demo"
-                className="group inline-flex items-center gap-2 px-6 py-3 border border-white/10 text-white font-semibold rounded-xl hover:bg-white/10 transition-all glass-card"
-              >
-                <div className="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center group-hover:bg-indigo-500/30 transition-colors">
-                  <Play className="w-3 h-3 text-indigo-400 ml-0.5" />
-                </div>
-                Watch Demo
-              </button>
             </motion.div>
 
-            {/* Social Proof */}
+            {/* Early access badge */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="flex items-center gap-4 mt-10"
+              className="flex items-center gap-3 mt-10"
             >
-              <div className="flex -space-x-2">
-                {["A", "B", "C", "D", "E"].map((letter, i) => (
-                  <div
-                    key={i}
-                    className="w-8 h-8 rounded-full border-2 border-[#09090b] bg-linear-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white text-xs font-bold"
-                  >
-                    {letter}
-                  </div>
-                ))}
-              </div>
-              <div>
-                <div className="flex items-center gap-1">
-                  {[1, 2, 3, 4, 5].map((s) => (
-                    <Star
-                      key={s}
-                      className="w-3 h-3 text-amber-400 fill-amber-400"
-                    />
-                  ))}
-                </div>
-                <p className="text-gray-400 text-sm">
-                  <span className="text-white font-semibold">2,400+</span> job
-                  seekers trust JobPilot
-                </p>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 text-indigo-300 text-sm font-medium">
+                <Sparkles className="w-3.5 h-3.5" />
+                Now in early access — sign up free
               </div>
             </motion.div>
           </div>
@@ -219,9 +188,12 @@ export default function Hero() {
                 </div>
                 <div className="flex-1 mx-4">
                   <div className="bg-white/5 rounded-md px-3 py-1 text-xs text-gray-500 text-center">
-                    app.jobpilot.ai/dashboard
+                    jobpilot.cc/dashboard
                   </div>
                 </div>
+                <span className="text-[10px] text-gray-600 border border-white/10 px-2 py-0.5 rounded-full">
+                  Preview
+                </span>
               </div>
 
               {/* Dashboard content */}
@@ -231,7 +203,8 @@ export default function Hero() {
                   <div>
                     <p className="text-xs text-gray-500">Good morning</p>
                     <p className="text-white font-semibold text-sm">
-                      Welcome back, Alex 👋
+                      Welcome back 👋{" "}
+                      <span className="text-gray-500 font-normal text-xs">(sample data)</span>
                     </p>
                   </div>
                   <div className="w-8 h-8 rounded-full bg-linear-to-br from-indigo-500 to-violet-600" />
@@ -256,7 +229,7 @@ export default function Hero() {
                       label: "Resume Score",
                       value: "92",
                       color: "text-violet-400",
-                      icon: Star,
+                      icon: BarChart3,
                     },
                   ].map((stat) => (
                     <div

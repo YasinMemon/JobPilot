@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { Plus, Minus } from "lucide-react";
+import { SUPPORT_EMAIL } from "@/lib/site-config";
 
 const faqs = [
   {
@@ -51,7 +52,7 @@ const faqs = [
     id: "faq-enterprise",
     question: "Do you offer plans for universities and career centers?",
     answer:
-      "Yes! Our Enterprise plan is designed for teams, universities, bootcamps, and career centers who want to provide JobPilot to multiple students or employees. It includes a team dashboard, bulk management tools, custom AI training, API access, and a dedicated account manager. Contact our sales team for custom pricing.",
+      "Yes! Our Enterprise plan is designed for teams, universities, bootcamps, and career centers who want to provide JobPilot to multiple students or employees. It includes a team dashboard, bulk management tools, custom AI training, API access, and a dedicated account manager. Reach out via our contact page for custom pricing.",
   },
 ];
 
@@ -171,7 +172,7 @@ export default function FAQ() {
         >
           Still have questions?{" "}
           <a
-            href="mailto:support@jobpilot.ai"
+            href={`mailto:${SUPPORT_EMAIL}`}
             className="text-indigo-400 hover:text-indigo-300 transition-colors"
           >
             Chat with our support team →

@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Play } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 export default function CTA() {
   return (
@@ -36,35 +37,25 @@ export default function CTA() {
           </h2>
 
           <p className="text-gray-400 text-xl leading-relaxed max-w-2xl mx-auto mb-10">
-            Join 2,400+ job seekers who are applying smarter, getting more
-            interviews, and landing their dream roles — all with the power of
-            AI.
+            Apply smarter, get more interviews, and manage your entire job
+            search — all in one AI-powered platform.
           </p>
 
           {/* Buttons */}
           <div className="flex flex-wrap items-center justify-center gap-4 mb-10">
-            <motion.a
-              href="/app"
-              id="cta-start-free"
+            <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.98 }}
-              className="group inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold text-lg rounded-xl shadow-2xl shadow-indigo-500/30 hover:opacity-95 transition-opacity"
             >
-              Start Free — No Credit Card
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </motion.a>
-
-            <motion.button
-              id="cta-view-demo"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.98 }}
-              className="group inline-flex items-center gap-2 px-8 py-4 border border-white/10 text-white font-bold text-lg rounded-xl hover:bg-white/5 transition-colors glass-card"
-            >
-              <div className="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center group-hover:bg-indigo-500/30 transition-colors">
-                <Play className="w-3.5 h-3.5 text-indigo-400 ml-0.5" />
-              </div>
-              View Demo
-            </motion.button>
+              <Link
+                href="/register"
+                id="cta-start-free"
+                className="group inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold text-lg rounded-xl shadow-2xl shadow-indigo-500/30 hover:opacity-95 transition-opacity"
+              >
+                Start Free — No Credit Card
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </motion.div>
           </div>
 
           {/* Trust indicators */}
