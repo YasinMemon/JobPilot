@@ -23,7 +23,7 @@
     "antd": "^6.5.2",
     "axios": "^1.18.1",
     "bcryptjs": "^3.0.3",
-    "better-auth": "^1.6.23",
+    "better-auth": "1.6.23",
     "class-variance-authority": "^0.7.1",
     "cloudinary": "^2.10.0",
     "clsx": "^2.1.1",
@@ -51,7 +51,7 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/mailparser": "^3.9.0",
-    "@types/node": "^20",
+    "@types/node": "22.20.5",
     "@types/nodemailer": "^8.0.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -60,6 +60,6 @@
     "mailparser": "^3.9.40",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vitest": "^5.0.5"
+    "vitest": "^4.1.12"
   }
 }
