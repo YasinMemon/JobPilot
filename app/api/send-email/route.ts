@@ -8,140 +8,16 @@ import { ObjectId } from "mongodb";
 import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 import { google } from "googleapis";
+import {
+  buildSubject,
+  composeRawEmail,
+  type EmailAttachment,
+} from "@/lib/email/mime";
 
 // ─── Route Segment Config ─────────────────────────────────────────────────────
 // Allow up to 30 MB body to accommodate 25 MB attachments + form field overhead.
 export const maxDuration = 30;
 
-
-// ─── MIME Builder ─────────────────────────────────────────────────────────────
-
-const BOUNDARY_MIXED = "==JobPilot_mixed_boundary==";
-const BOUNDARY_ALT = "==JobPilot_alt_boundary==";
-
-/**
- * Converts an HTML string to a plain-text approximation by stripping tags
- * and normalising whitespace. Used as the text/plain fallback part.
- */
-function htmlToPlainText(html: string): string {
-  return html
-    .replace(/<br\s*\/?>/gi, "\n")
-    .replace(/<\/p>/gi, "\n\n")
-    .replace(/<\/li>/gi, "\n")
-    .replace(/<li[^>]*>/gi, "• ")
-    .replace(/<[^>]+>/g, "")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&nbsp;/g, " ")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
-}
-
-interface AttachmentPart {
-  filename: string;
-  mimeType: string;
-  data: Buffer;
-}
-
-/**
- * Builds a full RFC 2822 MIME email with:
- *   multipart/mixed
- *     └── multipart/alternative
- *           ├── text/plain
- *           └── text/html
- *     └── attachment #1 (optional)
- *     └── attachment #2 (optional)
- *     ...
- */
-function buildMimeMessage(opts: {
-  from: string;
-  to: string;
-  cc?: string;
-  bcc?: string;
-  subject: string;
-  html: string;
-  attachments: AttachmentPart[];
-}): string {
-  const { from, to, cc, bcc, subject, html, attachments } = opts;
-  const plainText = htmlToPlainText(html);
-
-  // Build headers
-  const headers = [
-    `From: ${from}`,
-    `To: ${to}`,
-    cc ? `Cc: ${cc}` : null,
-    bcc ? `Bcc: ${bcc}` : null,
-    `Subject: ${subject}`,
-    "MIME-Version: 1.0",
-    `Content-Type: multipart/mixed; boundary="${BOUNDARY_MIXED}"`,
-  ]
-    .filter(Boolean)
-    .join("\r\n");
-
-  // multipart/alternative (plain + html)
-  const altPart = [
-    `--${BOUNDARY_ALT}`,
-    "Content-Type: text/plain; charset=UTF-8",
-    "Content-Transfer-Encoding: quoted-printable",
-    "",
-    plainText,
-    "",
-    `--${BOUNDARY_ALT}`,
-    "Content-Type: text/html; charset=UTF-8",
-    "Content-Transfer-Encoding: quoted-printable",
-    "",
-    `<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;font-size:14px;color:#1a1a1a;line-height:1.6;">${html}</body></html>`,
-    "",
-    `--${BOUNDARY_ALT}--`,
-  ].join("\r\n");
-
-  // Attachment parts
-  const attachmentParts = attachments
-    .map((att) => {
-      const b64 = att.data.toString("base64");
-      // Wrap base64 at 76 chars per RFC 2045
-      const wrapped = b64.match(/.{1,76}/g)?.join("\r\n") ?? b64;
-      return [
-        `--${BOUNDARY_MIXED}`,
-        `Content-Type: ${att.mimeType}; name="${att.filename}"`,
-        "Content-Transfer-Encoding: base64",
-        `Content-Disposition: attachment; filename="${att.filename}"`,
-        "",
-        wrapped,
-        "",
-      ].join("\r\n");
-    })
-    .join("");
-
-  // Assemble full message
-  const body = [
-    headers,
-    "",
-    `--${BOUNDARY_MIXED}`,
-    `Content-Type: multipart/alternative; boundary="${BOUNDARY_ALT}"`,
-    "",
-    altPart,
-    "",
-    attachmentParts,
-    `--${BOUNDARY_MIXED}--`,
-  ].join("\r\n");
-
-  return body;
-}
-
-/**
- * Encodes a raw MIME string as Base64URL (required by Gmail API).
- */
-function toBase64Url(raw: string): string {
-  return Buffer.from(raw)
-    .toString("base64")
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/, "");
-}
 
 // ─── Route Handler ────────────────────────────────────────────────────────────
 
@@ -195,8 +71,7 @@ export async function POST(req: NextRequest) {
     const to = (formData.get("to") as string | null)?.trim() ?? "";
     const cc = (formData.get("cc") as string | null)?.trim() ?? "";
     const bcc = (formData.get("bcc") as string | null)?.trim() ?? "";
-    const subject =
-      (formData.get("subject") as string | null)?.trim() || "Job Application";
+    const subject = buildSubject(formData.get("subject") as string | null);
     const html =
       (formData.get("html") as string | null) ??
       "<p>Please find my application below.</p>";
@@ -210,7 +85,7 @@ export async function POST(req: NextRequest) {
 
     // ── Read attachment files ─────────────────────────────────────────────────
     const attachmentFiles = formData.getAll("attachments[]") as File[];
-    const attachmentParts: AttachmentPart[] = await Promise.all(
+    const attachmentParts: EmailAttachment[] = await Promise.all(
       attachmentFiles
         .filter((f) => f instanceof File && f.size > 0)
         .map(async (f) => {
@@ -226,7 +101,7 @@ export async function POST(req: NextRequest) {
     // ── Build MIME message ────────────────────────────────────────────────────
     const senderEmail = session?.user?.email ?? "";
 
-    const rawMime = buildMimeMessage({
+    const encodedMessage = await composeRawEmail({
       from: senderEmail,
       to,
       cc: cc || undefined,
@@ -235,8 +110,6 @@ export async function POST(req: NextRequest) {
       html,
       attachments: attachmentParts,
     });
-
-    const encodedMessage = toBase64Url(rawMime);
 
     // ── Set up Gmail client ───────────────────────────────────────────────────
     const oauth2Client = new google.auth.OAuth2(

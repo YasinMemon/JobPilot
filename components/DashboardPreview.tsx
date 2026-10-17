@@ -56,13 +56,12 @@ export default function DashboardPreview() {
               </div>
               <div className="flex-1 max-w-xs mx-auto">
                 <div className="bg-slate-900/80 rounded-md px-3 py-1 text-xs text-gray-500 text-center">
-                  app.jobpilot.ai/dashboard
+                  jobpilot.cc/dashboard
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-gray-500 text-xs">Live</span>
-              </div>
+              <span className="text-[10px] text-gray-600 border border-white/10 px-2 py-0.5 rounded-full">
+                Sample data
+              </span>
             </div>
 
             <div className="flex">
@@ -95,10 +94,10 @@ export default function DashboardPreview() {
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-white font-bold text-lg">
-                      Good Morning, Alex! 👋
+                      Your Dashboard 👋
                     </h3>
                     <p className="text-gray-500 text-sm">
-                      You have 3 new notifications today
+                      Sample data for illustration
                     </p>
                   </div>
                   <div className="flex items-center gap-2">

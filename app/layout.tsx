@@ -3,6 +3,7 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { Providers } from "./providers";
+import { SITE_URL } from "@/lib/site-config";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -11,6 +12,7 @@ const plusJakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "JobPilot | AI-powered job applications",
   description:
     "JobPilot helps job seekers manage applications, tailor resumes, and move faster with AI-assisted workflows.",
@@ -26,7 +28,7 @@ export const metadata: Metadata = {
     title: "JobPilot | AI-powered job applications",
     description: "Manage applications and tailor your job search with AI.",
     type: "website",
-    url: "https://jobpilot.ai",
+    url: SITE_URL,
   },
   twitter: {
     card: "summary_large_image",

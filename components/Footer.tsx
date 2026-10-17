@@ -1,39 +1,29 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Target, X, Code2, Globe, Mail } from "lucide-react";
+import { Target, Mail } from "lucide-react";
 import Link from "next/link";
+import { SUPPORT_EMAIL } from "@/lib/site-config";
 
+/**
+ * Footer navigation.
+ * Only include links that point to real pages.
+ * Links with href "#" have been removed until the pages exist.
+ */
 const navigation = {
   product: [
     { name: "Features", href: "#features" },
     { name: "How It Works", href: "#how-it-works" },
     { name: "Dashboard", href: "#dashboard" },
-    { name: "Pricing", href: "#pricing" },
-    { name: "Changelog", href: "#" },
   ],
-  resources: [
-    { name: "Documentation", href: "#" },
-    { name: "API Reference", href: "#" },
-    { name: "Blog", href: "#" },
-    { name: "Careers", href: "#" },
-    { name: "Status", href: "#" },
-  ],
+  // Resources section intentionally omitted — docs/blog/API/careers/status
+  // pages do not yet exist. Re-add when pages are live.
   company: [
-    { name: "About", href: "#" },
     { name: "Contact", href: "/contact" },
     { name: "Privacy Policy", href: "/privacy-policy" },
     { name: "Terms of Service", href: "/terms" },
-    { name: "Cookie Policy", href: "#" },
   ],
 };
-
-const socials = [
-  { icon: X, href: "#", label: "X (Twitter)" },
-  { icon: Code2, href: "#", label: "GitHub" },
-  { icon: Globe, href: "#", label: "LinkedIn" },
-  { icon: Mail, href: "mailto:support@jobpilot.ai", label: "Email" },
-];
 
 export default function Footer() {
   return (
@@ -43,7 +33,7 @@ export default function Footer() {
 
       <div className="max-w-7xl mx-auto px-6 pt-16 pb-8 relative z-10">
         {/* Top section */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
           {/* Brand */}
           <div className="col-span-2">
             <motion.div
@@ -63,22 +53,18 @@ export default function Footer() {
               AI-powered job application assistant helping developers, students,
               and job seekers land their dream roles.
             </p>
-            {/* Social links */}
-            <div className="flex items-center gap-3">
-              {socials.map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  aria-label={social.label}
-                  className="w-8 h-8 rounded-lg bg-white/5 border border-white/8 flex items-center justify-center text-gray-400 hover:text-white hover:bg-indigo-500/20 hover:border-indigo-500/30 transition-all"
-                >
-                  <social.icon className="w-4 h-4" />
-                </a>
-              ))}
-            </div>
+            {/* Contact link in place of social icons until real profiles exist */}
+            <a
+              href={`mailto:${SUPPORT_EMAIL}`}
+              className="inline-flex items-center gap-2 text-gray-500 text-sm hover:text-indigo-400 transition-colors"
+              aria-label="Email support"
+            >
+              <Mail className="w-4 h-4" />
+              {SUPPORT_EMAIL}
+            </a>
           </div>
 
-          {/* Navigation groups */}
+          {/* Product navigation */}
           <div>
             <p className="text-white font-semibold text-sm mb-4">Product</p>
             <ul className="space-y-2.5">
@@ -95,22 +81,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div>
-            <p className="text-white font-semibold text-sm mb-4">Resources</p>
-            <ul className="space-y-2.5">
-              {navigation.resources.map((item) => (
-                <li key={item.name}>
-                  <Link
-                    href={item.href}
-                    className="text-gray-500 text-sm hover:text-white transition-colors"
-                  >
-                    {item.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
+          {/* Company navigation */}
           <div>
             <p className="text-white font-semibold text-sm mb-4">Company</p>
             <ul className="space-y-2.5">
@@ -128,35 +99,10 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Newsletter */}
-        <div className="glass-card rounded-2xl p-6 border border-white/8 mb-12">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-            <div>
-              <p className="text-white font-semibold mb-1">
-                Stay in the loop ✉️
-              </p>
-              <p className="text-gray-500 text-sm">
-                Get the latest job search tips and product updates.
-              </p>
-            </div>
-            <div className="flex gap-2 w-full md:w-auto">
-              <input
-                type="email"
-                placeholder="your@email.com"
-                className="flex-1 md:w-64 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-indigo-500/50 transition-colors"
-              />
-              <button className="px-4 py-2.5 rounded-xl bg-linear-to-r from-indigo-600 to-violet-600 text-white text-sm font-medium hover:opacity-90 transition-opacity whitespace-nowrap">
-                Subscribe
-              </button>
-            </div>
-          </div>
-        </div>
-
         {/* Bottom bar */}
         <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-gray-600 text-sm">
-            © {new Date().getFullYear()} JobPilot. All rights reserved. Built
-            with ❤️ for job seekers everywhere.
+            © {new Date().getFullYear()} JobPilot. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
             <Link
@@ -171,10 +117,6 @@ export default function Footer() {
             >
               Terms of Service
             </Link>
-            <div className="flex items-center gap-1.5">
-              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-gray-600 text-xs">All systems normal</span>
-            </div>
           </div>
         </div>
       </div>

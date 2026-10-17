@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Check, X } from "lucide-react";
+import Link from "next/link";
 
 const comparisons = [
   ["Manual, generic emails", "AI-generated personalized emails"],
@@ -90,12 +91,12 @@ export default function Comparison() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="text-center mt-12"
         >
-          <a
-            href="#pricing"
+          <Link
+            href="/register"
             className="inline-flex items-center gap-2 px-8 py-4 bg-linear-to-r from-indigo-600 to-violet-600 text-white font-semibold rounded-xl hover:opacity-90 transition-all hover:scale-105 shadow-lg shadow-indigo-500/25"
           >
             Get Started Free — It&apos;s Time to Apply Smarter
-          </a>
+          </Link>
         </motion.div>
       </div>
     </section>
