@@ -13,10 +13,10 @@ const faqs = [
       "JobPilot is an AI-powered job application platform that helps you generate personalized application emails, optimize your resume for ATS systems, track all your applications, and prepare for interviews. Simply paste a job description, and our AI does the rest — analyzing requirements, generating a tailored email, and providing smart suggestions.",
   },
   {
-    id: "faq-free-trial",
-    question: "Is there a free plan? Do I need a credit card?",
+    id: "faq-cost",
+    question: "Is JobPilot free? Do I need a credit card?",
     answer:
-      "Yes! JobPilot has a generous free tier that includes 5 AI email generations per month, basic resume analysis, and tracking for up to 10 applications. You don't need a credit card to sign up. The Pro plan includes a 7-day free trial — again, no credit card required to start.",
+      "JobPilot is free while in early access, and you don't need a credit card to sign up. We may introduce paid options in the future; if that happens, we'll announce it clearly in advance.",
   },
   {
     id: "faq-ats",
@@ -43,16 +43,16 @@ const faqs = [
       "Your privacy and data security are our top priority. All data is encrypted in transit and at rest. We never sell or share your personal information with third parties. Your resume data is only used to generate your personalized content and is never shared with employers directly. You can delete your account and all associated data at any time.",
   },
   {
-    id: "faq-cancel",
-    question: "Can I cancel my subscription at any time?",
+    id: "faq-delete",
+    question: "Can I delete my account?",
     answer:
-      "Yes, absolutely. You can cancel your Pro or Enterprise subscription at any time from your account settings with no penalties or cancellation fees. You'll continue to have access to Pro features until the end of your current billing period, then you'll be downgraded to the Free plan.",
+      "Yes. You can delete your account and all associated data at any time. If you need help, email our support team.",
   },
   {
-    id: "faq-enterprise",
-    question: "Do you offer plans for universities and career centers?",
+    id: "faq-institutions",
+    question: "Can universities and career centers use JobPilot?",
     answer:
-      "Yes! Our Enterprise plan is designed for teams, universities, bootcamps, and career centers who want to provide JobPilot to multiple students or employees. It includes a team dashboard, bulk management tools, custom AI training, API access, and a dedicated account manager. Reach out via our contact page for custom pricing.",
+      "Individual students and staff can sign up for free today. We don't have dedicated institutional features yet, but if you're interested in using JobPilot with a group, email our support team and we'll be happy to talk.",
   },
 ];
 

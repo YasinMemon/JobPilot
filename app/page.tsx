@@ -3,7 +3,6 @@ import Features from "@/components/Features";
 import HowItWorks from "@/components/HowItWorks";
 import DashboardPreview from "@/components/DashboardPreview";
 import Comparison from "@/components/Comparison";
-import Pricing from "@/components/Pricing";
 import FAQ from "@/components/FAQ";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
@@ -16,7 +15,6 @@ export default function Home() {
       <HowItWorks />
       <DashboardPreview />
       <Comparison />
-      <Pricing />
       <FAQ />
       <CTA />
       <Footer />

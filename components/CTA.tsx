@@ -52,39 +52,16 @@ export default function CTA() {
                 id="cta-start-free"
                 className="group inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold text-lg rounded-xl shadow-2xl shadow-indigo-500/30 hover:opacity-95 transition-opacity"
               >
-                Start Free — No Credit Card
+                Get Started Free
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
             </motion.div>
           </div>
 
-          {/* Trust indicators */}
-          <div className="flex flex-wrap items-center justify-center gap-6 text-gray-500 text-sm">
-            <span className="flex items-center gap-1.5">
-              <div className="w-4 h-4 rounded-full bg-emerald-500/20 flex items-center justify-center">
-                <div className="w-2 h-2 rounded-full bg-emerald-400" />
-              </div>
-              Free plan forever
-            </span>
-            <span className="flex items-center gap-1.5">
-              <div className="w-4 h-4 rounded-full bg-indigo-500/20 flex items-center justify-center">
-                <div className="w-2 h-2 rounded-full bg-indigo-400" />
-              </div>
-              No credit card required
-            </span>
-            <span className="flex items-center gap-1.5">
-              <div className="w-4 h-4 rounded-full bg-violet-500/20 flex items-center justify-center">
-                <div className="w-2 h-2 rounded-full bg-violet-400" />
-              </div>
-              Setup in 2 minutes
-            </span>
-            <span className="flex items-center gap-1.5">
-              <div className="w-4 h-4 rounded-full bg-amber-500/20 flex items-center justify-center">
-                <div className="w-2 h-2 rounded-full bg-amber-400" />
-              </div>
-              Cancel anytime
-            </span>
-          </div>
+          {/* Early access note */}
+          <p className="text-gray-500 text-sm">
+            JobPilot is free while in early access.
+          </p>
         </motion.div>
       </div>
     </section>

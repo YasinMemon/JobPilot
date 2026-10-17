@@ -62,12 +62,6 @@ export default function Hero() {
             How It Works
           </a>
           <a
-            href="#pricing"
-            className="hover:text-white transition-colors cursor-pointer"
-          >
-            Pricing
-          </a>
-          <a
             href="#faq"
             className="hover:text-white transition-colors cursor-pointer"
           >

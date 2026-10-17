@@ -15,7 +15,6 @@ const navigation = {
     { name: "Features", href: "#features" },
     { name: "How It Works", href: "#how-it-works" },
     { name: "Dashboard", href: "#dashboard" },
-    { name: "Pricing", href: "#pricing" },
   ],
   // Resources section intentionally omitted — docs/blog/API/careers/status
   // pages do not yet exist. Re-add when pages are live.
