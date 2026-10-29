@@ -126,7 +126,10 @@ export default function PrivacyPolicyPage() {
                 <li>
                   Emails are sent only when you explicitly choose to send them.
                 </li>
-                <li>We never read, monitor, or analyze your Gmail inbox.</li>
+                <li>
+                  Gmail data is used only for features you trigger and is never
+                  used to train generalized AI models.
+                </li>
                 <li>
                   Google user data is not sold or shared with advertisers.
                 </li>

@@ -42,7 +42,7 @@ export const CONTACT_SOCIAL_LINKS = [
   { label: "GitHub", href: "#" },
 ] as const;
 
-export const PRIVACY_POLICY_LAST_UPDATED = "August 3, 2026";
+export const PRIVACY_POLICY_LAST_UPDATED = "October 29, 2026";
 
 export const PRIVACY_POLICY_LINKS = [
   { label: "Contact Us", href: "/contact" },
@@ -60,7 +60,7 @@ export const PRIVACY_POLICY_SECTIONS = [
     bullets: [
       "We do not sell or share your personal information with advertisers.",
       "We only request Google permissions necessary for the functionality you choose to use.",
-      "We do not read or analyze your Gmail inbox contents for advertising or unrelated processing.",
+      "We read Gmail messages only to sync job applications you ask us to track, and never for advertising or unrelated processing.",
       "You can revoke Google permissions at any time through your Google Account settings.",
     ],
   },
@@ -96,16 +96,18 @@ export const PRIVACY_POLICY_SECTIONS = [
     id: "google-api-data-usage",
     title: "Google API Data Usage",
     body: [
-      "We request only the Google permissions necessary for application functionality.",
-      "Gmail access is used solely to send emails that you explicitly initiate after giving consent.",
-      "We do not read, monitor, or analyze your Gmail inbox contents for advertising, profiling, or unrelated processing.",
-      "Google user data is never sold or shared with advertisers.",
+      "JobPilot's use and transfer of information received from Google APIs adheres to the Google API Services User Data Policy, including the Limited Use requirements.",
+      "The use of raw or derived user data received from Workspace APIs will adhere to the Google User Data Policy, including the Limited Use requirements.",
+      "We request three Gmail scopes: gmail.readonly, gmail.modify, and gmail.send. They are used to (1) send application emails that you explicitly initiate, (2) apply a JobPilot label to those sent emails, and (3) when you run a sync, find job-application emails in your mailbox so they can be added to your application tracker.",
+      "When you run a sync or send an application, the sender, subject, snippet, and the first part of the body of the relevant email are sent to our AI provider, Groq, solely to extract structured details such as company, role, and status. This is the only way Gmail data reaches an AI service.",
+      "We do not use Google user data to develop, improve, or train generalized AI or machine learning models, and we do not allow our AI provider to do so. Gmail data is not used for advertising, profiling, or sold to third parties.",
+      "Humans do not read your Gmail data except with your explicit consent, to investigate abuse or security issues, or to comply with law.",
       "You can revoke Google permissions at any time through your Google Account settings.",
     ],
     bullets: [
       "We do not sell or share your personal information with advertisers.",
       "We only request Google permissions necessary for the functionality you choose to use.",
-      "We do not read or analyze your Gmail inbox contents for advertising or unrelated processing.",
+      "Gmail data is not used to train generalized AI or machine learning models.",
       "You can revoke Google permissions at any time through your Google Account settings.",
     ],
   },
@@ -131,8 +133,8 @@ export const PRIVACY_POLICY_SECTIONS = [
     ],
     bullets: [
       "Google OAuth for authentication and account linking.",
-      "Google Gmail API for user-initiated email sending.",
-      "OpenAI or other AI providers for text generation and assistant features.",
+      "Google Gmail API for user-initiated email sending and job-application email sync.",
+      "Groq (API, with a configuration that does not permit training on our data) for text generation, assistant features, and extracting details from job-application emails.",
       "Cloudinary for media and resume asset storage.",
     ],
   },
