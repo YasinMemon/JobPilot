@@ -71,5 +71,5 @@ export const auth = betterAuth({
 
   trustedOrigins: [process.env.BETTER_AUTH_URL!, "https://jobpilot.cc"],
 
-  secret: process.env.AUTH_SECRET!,
+  secret: process.env.BETTER_AUTH_SECRET ?? process.env.AUTH_SECRET!,
 });

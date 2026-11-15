@@ -119,7 +119,7 @@ export default function DashboardSidebar() {
         <p className="px-3 pt-1 pb-2 text-[10px] font-semibold uppercase tracking-widest text-zinc-600">
           Main
         </p>
-        {dashboardNav.slice(0, 4).map((item) => (
+        {dashboardNav.slice(0, 5).map((item) => (
           <SidebarItem
             key={item.href}
             href={item.href}
@@ -131,7 +131,7 @@ export default function DashboardSidebar() {
         <p className="px-3 pt-1 pb-2 text-[10px] font-semibold uppercase tracking-widest text-zinc-600">
           Account
         </p>
-        {dashboardNav.slice(4).map((item) => (
+        {dashboardNav.slice(5).map((item) => (
           <SidebarItem
             key={item.href}
             href={item.href}
