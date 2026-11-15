@@ -324,6 +324,7 @@ export type ResumeErrorCode =
   | "AI_FAILED"
   | "RATE_LIMITED"
   | "EXPORT_FAILED"
+  | "PDF_UNSUPPORTED_TEXT"
   | "VALIDATION"
   | "NOT_FOUND"
   | "UNAUTHORIZED"
