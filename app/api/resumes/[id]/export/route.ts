@@ -5,7 +5,7 @@ import { ResumeError, errorResponse } from "@/lib/resume/errors";
 import { isValidObjectId, parseJson } from "@/lib/resume/http";
 import { safeFileName } from "@/lib/resume/layout";
 import { exportBodySchema, resumeContentSchema, templateSchema } from "@/lib/resume/schemas";
-import { renderResumeDocx, renderResumePdf } from "@/services/resumeExport.service";
+import { UnsupportedPdfTextError, renderResumeDocx, renderResumePdf } from "@/services/resumeExport.service";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -39,6 +39,13 @@ export async function POST(req: NextRequest, context: RouteContext) {
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
       }
     } catch (err) {
+      if (err instanceof UnsupportedPdfTextError) {
+        throw new ResumeError(
+          "PDF_UNSUPPORTED_TEXT",
+          "This resume contains characters the PDF export can't render yet. Please download the DOCX instead.",
+          422,
+        );
+      }
       console.error("[export] render failed:", err instanceof Error ? err.message : err);
       throw new ResumeError(
         "EXPORT_FAILED",

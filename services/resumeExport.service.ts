@@ -118,6 +118,13 @@ const REPLACEMENTS: Record<string, string> = {
   "−": "-",
 };
 
+export class UnsupportedPdfTextError extends Error {
+  constructor() {
+    super("Resume contains characters the PDF export cannot encode.");
+    this.name = "UnsupportedPdfTextError";
+  }
+}
+
 function makeSafe(font: PDFFont) {
   const cache = new Map<string, string>();
   return (input: string): string => {
@@ -130,7 +137,9 @@ function makeSafe(font: PDFFont) {
           font.encodeText(ch);
           ok = ch;
         } catch {
-          ok = "?";
+          // The built-in PDF fonts only cover WinAnsi. Never silently swap
+          // characters for "?" — that would corrupt the candidate's content.
+          throw new UnsupportedPdfTextError();
         }
         cache.set(ch, ok);
       }
@@ -258,21 +267,27 @@ class PdfWriter {
   entryLine(left: string, right: string, bold = true, keepWith = 0) {
     const { st, fonts } = this;
     const font = bold ? fonts.bold : fonts.italic;
-    this.ensure(this.lineH + keepWith);
-    this.y -= this.lineH;
     const r = this.safe(right);
     const rW = r ? fonts.regular.widthOfTextAtSize(r, st.bodySize) : 0;
-    const l = this.wrap(left, font, st.bodySize, this.contentW - rW - 12)[0] ?? "";
-    this.page.drawText(l, { x: st.margin, y: this.y, size: st.bodySize, font, color: rgb(0.07, 0.07, 0.07) });
-    if (r) {
-      this.page.drawText(r, {
-        x: PAGE_W - st.margin - rW,
-        y: this.y,
-        size: st.bodySize,
-        font: fonts.regular,
-        color: rgb(0.2, 0.2, 0.2),
-      });
-    }
+    // Only the first line shares space with the right-aligned value;
+    // wrap everything at that width so no text is dropped.
+    const lines = this.wrap(left, font, st.bodySize, this.contentW - rW - (rW ? 12 : 0));
+    if (!lines.length) lines.push("");
+    this.ensure(this.lineH * lines.length + keepWith);
+    lines.forEach((l, i) => {
+      this.ensure(this.lineH);
+      this.y -= this.lineH;
+      this.page.drawText(l, { x: st.margin, y: this.y, size: st.bodySize, font, color: rgb(0.07, 0.07, 0.07) });
+      if (i === 0 && r) {
+        this.page.drawText(r, {
+          x: PAGE_W - st.margin - rW,
+          y: this.y,
+          size: st.bodySize,
+          font: fonts.regular,
+          color: rgb(0.2, 0.2, 0.2),
+        });
+      }
+    });
   }
 
   bullet(text: string) {
