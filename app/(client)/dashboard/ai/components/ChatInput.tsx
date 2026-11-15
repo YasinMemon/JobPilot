@@ -169,9 +169,9 @@ export function ChatInput({
       />
 
       {/* Action row */}
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         {/* Left: Attach buttons */}
-        <div className="flex items-center gap-1.5">
+        <div className="flex flex-wrap items-center gap-1.5">
           {/* Hidden file inputs */}
           <input
             ref={resumeInputRef}
@@ -192,7 +192,7 @@ export function ChatInput({
             id="attach-resume-btn"
             onClick={() => resumeInputRef.current?.click()}
             disabled={uploading !== null}
-            className="flex items-center gap-1.5 rounded-lg border border-[#27272a] bg-[#0f0f0f] px-2.5 py-1.5 text-[11px] font-medium text-zinc-500 transition-all duration-150 hover:border-[#3f3f46] hover:text-zinc-300 disabled:opacity-50"
+            className="flex items-center gap-1.5 whitespace-nowrap rounded-lg border border-[#27272a] bg-[#0f0f0f] px-2.5 py-2 text-[11px] sm:py-1.5 font-medium text-zinc-500 transition-all duration-150 hover:border-[#3f3f46] hover:text-zinc-300 disabled:opacity-50"
           >
             {uploading === "resume" ? (
               <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -206,7 +206,7 @@ export function ChatInput({
             id="attach-jd-btn"
             onClick={() => jdInputRef.current?.click()}
             disabled={uploading !== null}
-            className="flex items-center gap-1.5 rounded-lg border border-[#27272a] bg-[#0f0f0f] px-2.5 py-1.5 text-[11px] font-medium text-zinc-500 transition-all duration-150 hover:border-[#3f3f46] hover:text-zinc-300 disabled:opacity-50"
+            className="flex items-center gap-1.5 whitespace-nowrap rounded-lg border border-[#27272a] bg-[#0f0f0f] px-2.5 py-2 text-[11px] sm:py-1.5 font-medium text-zinc-500 transition-all duration-150 hover:border-[#3f3f46] hover:text-zinc-300 disabled:opacity-50"
           >
             {uploading === "jd" ? (
               <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -219,7 +219,7 @@ export function ChatInput({
           <button
             id="attach-file-btn"
             aria-label="Attach file"
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#27272a] bg-[#0f0f0f] text-zinc-600 transition-all duration-150 hover:border-[#3f3f46] hover:text-zinc-400"
+            className="flex h-9 w-9 items-center justify-center rounded-lg border sm:h-8 sm:w-8 border-[#27272a] bg-[#0f0f0f] text-zinc-600 transition-all duration-150 hover:border-[#3f3f46] hover:text-zinc-400"
           >
             <Paperclip className="h-3.5 w-3.5" />
           </button>

@@ -8,10 +8,16 @@ import {
   Mail,
   BarChart3,
   Target,
+  Menu,
+  X,
 } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 
 export default function Hero() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const closeMenu = () => setMenuOpen(false);
+
   return (
     <section
       id="hero"
@@ -28,7 +34,7 @@ export default function Hero() {
       </div>
 
       {/* Navbar */}
-      <nav className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-5 max-w-7xl mx-auto w-full">
+      <nav className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-4 sm:px-6 sm:py-5 max-w-7xl mx-auto w-full">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -73,21 +79,60 @@ export default function Hero() {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="flex items-center gap-3"
+          className="flex items-center gap-2 sm:gap-3"
         >
           <Link
             href="/login"
-            className="text-sm text-gray-400 hover:text-white transition-colors"
+            className="hidden text-sm text-gray-400 hover:text-white transition-colors sm:inline"
           >
             Sign In
           </Link>
           <Link
             href="/register"
-            className="px-4 py-2 text-sm font-medium text-white bg-linear-to-r from-indigo-600 to-violet-600 rounded-lg hover:opacity-90 transition-opacity"
+            className="whitespace-nowrap px-3 py-2 text-sm font-medium text-white bg-linear-to-r from-indigo-600 to-violet-600 rounded-lg hover:opacity-90 transition-opacity sm:px-4"
           >
-            Get Started Free
+            Get Started<span className="hidden min-[380px]:inline">&nbsp;Free</span>
           </Link>
+          <button
+            type="button"
+            onClick={() => setMenuOpen((o) => !o)}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            aria-controls="landing-mobile-menu"
+            className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 text-gray-300 hover:text-white md:hidden"
+          >
+            {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </motion.div>
+
+        {menuOpen && (
+          <div
+            id="landing-mobile-menu"
+            className="absolute inset-x-4 top-full flex flex-col rounded-2xl border border-white/10 bg-[#0c0c10]/95 p-2 text-sm text-gray-300 shadow-2xl backdrop-blur-xl sm:inset-x-6 md:hidden"
+          >
+            {[
+              ["#features", "Features"],
+              ["#how-it-works", "How It Works"],
+              ["#faq", "FAQ"],
+            ].map(([href, label]) => (
+              <a
+                key={href}
+                href={href}
+                onClick={closeMenu}
+                className="rounded-xl px-4 py-3 hover:bg-white/5 hover:text-white"
+              >
+                {label}
+              </a>
+            ))}
+            <Link
+              href="/login"
+              onClick={closeMenu}
+              className="rounded-xl px-4 py-3 hover:bg-white/5 hover:text-white sm:hidden"
+            >
+              Sign In
+            </Link>
+          </div>
+        )}
       </nav>
 
       {/* Hero Content */}

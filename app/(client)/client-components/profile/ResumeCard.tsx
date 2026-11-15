@@ -224,15 +224,15 @@ export default function ResumeCard({
             if (e.target === e.currentTarget) setIsPreviewOpen(false);
           }}
         >
-          <div className="relative flex h-[92vh] w-[92vw] max-w-5xl flex-col overflow-hidden rounded-2xl bg-background shadow-2xl">
+          <div className="relative flex h-[92dvh] w-[calc(100vw-1rem)] max-w-5xl sm:w-[92vw] flex-col overflow-hidden rounded-2xl bg-background shadow-2xl">
             {/* Modal Header */}
-            <div className="flex items-center justify-between border-b px-6 py-4 shrink-0">
+            <div className="flex items-center justify-between gap-2 border-b px-3 py-3 shrink-0 sm:px-6 sm:py-4">
               <div className="flex items-center gap-3 min-w-0">
                 <div className="rounded-md bg-primary/10 p-2 shrink-0">
                   <FileText className="h-5 w-5 text-primary" />
                 </div>
                 <div className="min-w-0">
-                  <h2 className="font-semibold truncate max-w-[300px] text-sm md:text-base">
+                  <h2 className="font-semibold truncate max-w-[160px] text-sm sm:max-w-[300px] md:text-base">
                     {resumeFileName}
                   </h2>
                   <p className="text-xs text-muted-foreground">PDF Document</p>

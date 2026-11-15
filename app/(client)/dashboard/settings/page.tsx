@@ -86,7 +86,7 @@ function SidebarItem({
     <button
       id={`settings-tab-${tab.id}`}
       onClick={onClick}
-      className={`group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-all duration-200 ${
+      className={`group flex shrink-0 items-center gap-3 rounded-xl px-3 py-2.5 text-left md:w-full transition-all duration-200 ${
         active
           ? "bg-gradient-to-r from-blue-600/15 to-purple-600/10 border border-blue-500/15 text-white"
           : "border border-transparent text-zinc-400 hover:bg-[#1c1c1c] hover:text-zinc-200"
@@ -104,7 +104,7 @@ function SidebarItem({
           {tab.label}
         </p>
         <p
-          className={`mt-0.5 text-[11px] truncate transition-colors ${
+          className={`mt-0.5 hidden text-[11px] truncate transition-colors md:block ${
             active ? "text-zinc-400" : "text-zinc-600 group-hover:text-zinc-500"
           }`}
         >
@@ -112,7 +112,7 @@ function SidebarItem({
         </p>
       </div>
       <ChevronRight
-        className={`h-3.5 w-3.5 shrink-0 transition-all duration-200 ${
+        className={`hidden h-3.5 w-3.5 shrink-0 transition-all md:block duration-200 ${
           active ? "text-zinc-400 translate-x-0.5" : "text-zinc-700 opacity-0 group-hover:opacity-100"
         }`}
       />
@@ -162,9 +162,9 @@ function SettingsInner() {
         </div>
       </div>
 
-      <div className="flex gap-5">
+      <div className="flex flex-col gap-4 md:flex-row md:gap-5">
         {/* ── Sidebar ─── */}
-        <aside className="w-56 shrink-0 space-y-1">
+        <aside className="flex w-full gap-2 overflow-x-auto pb-1 md:block md:w-56 md:shrink-0 md:space-y-1 md:overflow-visible md:pb-0">
           {TABS.map((tab) => (
             <SidebarItem
               key={tab.id}
@@ -176,7 +176,7 @@ function SettingsInner() {
         </aside>
 
         {/* ── Content panel ─── */}
-        <main className="flex-1 min-w-0 rounded-2xl border border-[#27272a] bg-[#111111] p-6">
+        <main className="flex-1 min-w-0 rounded-2xl border border-[#27272a] bg-[#111111] p-4 sm:p-6">
           {/* Breadcrumb */}
           <div className="mb-5 flex items-center gap-1.5 text-[11px] text-zinc-600">
             <span>Settings</span>

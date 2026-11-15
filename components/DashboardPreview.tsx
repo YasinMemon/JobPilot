@@ -90,8 +90,8 @@ export default function DashboardPreview() {
                 ))}
               </div>
 
-              <div className="flex-1 p-5 space-y-4">
-                <div className="flex items-center justify-between">
+              <div className="min-w-0 flex-1 p-4 sm:p-5 space-y-4">
+                <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
                     <h3 className="text-white font-bold text-lg">
                       Your Dashboard 👋

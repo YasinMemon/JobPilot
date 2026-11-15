@@ -265,15 +265,15 @@ const AdminDashboard = () => {
   });
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: "#0a0a14", fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif" }}>
+    <div className="flex min-h-screen flex-col md:flex-row" style={{ background: "#0a0a14", fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif" }}>
       {/* Sidebar */}
-      <aside style={{ width: 220, minHeight: "100vh", background: "#0f0f1e", borderRight: "1px solid #1e1e3a", display: "flex", flexDirection: "column", padding: "24px 16px", position: "sticky" as const, top: 0, height: "100vh" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 32 }}>
+      <aside className="flex w-full flex-row flex-wrap items-center gap-2 border-b border-[#1e1e3a] px-3 py-3 md:sticky md:top-0 md:h-screen md:min-h-screen md:w-[220px] md:shrink-0 md:flex-col md:flex-nowrap md:items-stretch md:gap-0 md:border-b-0 md:border-r md:px-4 md:py-6" style={{ background: "#0f0f1e" }}>
+        <div className="mr-auto flex items-center gap-2.5 md:mb-8 md:mr-0">
           <span style={{ fontSize: 24 }}>⚡</span>
           <span style={{ color: "#f1f5f9", fontSize: 18, fontWeight: 700, letterSpacing: "-0.02em" }}>JobPilot</span>
         </div>
-        <p style={{ color: "#334155", fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", marginBottom: 8, textTransform: "uppercase" as const }}>ADMIN PANEL</p>
-        <nav style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+        <p className="mb-2 hidden md:block" style={{ color: "#334155", fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" as const }}>ADMIN PANEL</p>
+        <nav className="order-last flex w-full gap-1 md:order-none md:w-auto md:flex-col">
           {(["users", "applications"] as const).map((tab) => (
             <button
               key={tab}
@@ -292,24 +292,25 @@ const AdminDashboard = () => {
                 display: "flex",
                 alignItems: "center",
                 gap: 8,
-                width: "100%",
+                minHeight: 40,
                 transition: "all 0.15s",
               }}
+              className="flex-1 justify-center md:w-full md:flex-none md:justify-start"
             >
               {tab === "users" ? "👥" : "📋"} {tab.charAt(0).toUpperCase() + tab.slice(1)}
             </button>
           ))}
         </nav>
-        <div style={{ flex: 1 }} />
-        <button id="admin-logout" onClick={handleLogout} style={{ background: "transparent", border: "1px solid #1e293b", color: "#ef4444", padding: "10px 12px", borderRadius: 8, textAlign: "left" as const, cursor: "pointer", fontSize: 14, fontWeight: 500, display: "flex", alignItems: "center", gap: 8, width: "100%", transition: "all 0.15s" }}>
+        <div className="hidden flex-1 md:block" />
+        <button id="admin-logout" onClick={handleLogout} className="md:w-full" style={{ minHeight: 40, background: "transparent", border: "1px solid #1e293b", color: "#ef4444", padding: "10px 12px", borderRadius: 8, textAlign: "left" as const, cursor: "pointer", fontSize: 14, fontWeight: 500, display: "flex", alignItems: "center", gap: 8, transition: "all 0.15s" }}>
           🚪 Logout
         </button>
       </aside>
 
       {/* Main */}
-      <main style={{ flex: 1, padding: "32px 36px", overflowX: "auto" as const, minWidth: 0 }}>
+      <main className="min-w-0 flex-1 overflow-x-auto p-4 sm:p-6 md:px-9 md:py-8">
         {/* Stats */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 16, marginBottom: 32 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 180px), 1fr))", gap: 16, marginBottom: 32 }}>
           {[
             { label: "Total Users", value: stats?.totalUsers ?? "—", icon: "👥", color: "#6366f1" },
             { label: "New This Week", value: stats?.newSignupsThisWeek ?? "—", icon: "🆕", color: "#10b981" },
@@ -334,8 +335,8 @@ const AdminDashboard = () => {
           <div style={{ background: "#0f0f1e", border: "1px solid #1e1e3a", borderRadius: 16, overflow: "hidden" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "20px 24px", borderBottom: "1px solid #1e1e3a", gap: 12, flexWrap: "wrap" as const }}>
               <h2 style={{ color: "#f1f5f9", fontSize: 18, fontWeight: 700, margin: 0 }}>Users</h2>
-              <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" as const }}>
-                <input id="admin-user-search" style={{ background: "#1a1a2e", border: "1px solid #2d2d4e", borderRadius: 8, color: "#e2e8f0", padding: "8px 14px", fontSize: 13, outline: "none", width: 240 }} placeholder="Search name or email…" value={search} onChange={(e) => setSearch(e.target.value)} />
+              <div className="w-full sm:w-auto" style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" as const }}>
+                <input id="admin-user-search" className="w-full min-w-0 sm:w-60" style={{ background: "#1a1a2e", border: "1px solid #2d2d4e", borderRadius: 8, color: "#e2e8f0", padding: "8px 14px", fontSize: 13, outline: "none" }} placeholder="Search name or email…" value={search} onChange={(e) => setSearch(e.target.value)} />
                 <select id="admin-role-filter" style={{ background: "#1a1a2e", border: "1px solid #2d2d4e", borderRadius: 8, color: "#e2e8f0", padding: "8px 14px", fontSize: 13, outline: "none", cursor: "pointer" }} value={roleFilter} onChange={(e) => setRoleFilter(e.target.value as "all" | "user" | "admin")}>
                   <option value="all">All Roles</option>
                   <option value="user">User</option>
@@ -348,7 +349,7 @@ const AdminDashboard = () => {
                 <thead>
                   <tr style={{ background: "#0a0a14" }}>
                     {["User", "Email", "Role", "Location", "Joined", "Actions"].map((h) => (
-                      <th key={h} style={{ color: "#475569", fontSize: 11, fontWeight: 600, letterSpacing: "0.07em", textTransform: "uppercase" as const, padding: "12px 20px", textAlign: "left" as const, borderBottom: "1px solid #1e1e3a", whiteSpace: "nowrap" as const }}>{h}</th>
+                      <th key={h} className={h === "Email" ? "hidden md:table-cell" : h === "Location" || h === "Joined" ? "hidden lg:table-cell" : undefined} style={{ color: "#475569", fontSize: 11, fontWeight: 600, letterSpacing: "0.07em", textTransform: "uppercase" as const, padding: "12px 20px", textAlign: "left" as const, borderBottom: "1px solid #1e1e3a", whiteSpace: "nowrap" as const }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -365,17 +366,20 @@ const AdminDashboard = () => {
                             ? <img src={user.avatar} alt={user.fullName} style={{ width: 32, height: 32, borderRadius: "50%", objectFit: "cover" as const, border: "1px solid #2d2d4e", flexShrink: 0 }} />
                             : <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#1e1b4b", color: "#a78bfa", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, flexShrink: 0 }}>{user.fullName?.[0]?.toUpperCase() ?? "U"}</div>
                           }
-                          <span style={{ color: "#e2e8f0", fontWeight: 500 }}>{user.fullName}</span>
+                          <div style={{ minWidth: 0 }}>
+                            <span style={{ color: "#e2e8f0", fontWeight: 500 }}>{user.fullName}</span>
+                            <span className="block md:hidden" style={{ color: "#94a3b8", fontSize: 11 }}>{user.email ?? "—"}</span>
+                          </div>
                         </div>
                       </td>
-                      <td style={{ padding: "14px 20px", fontSize: 13, color: "#94a3b8", verticalAlign: "middle" as const, whiteSpace: "nowrap" as const }}>{user.email ?? "—"}</td>
+                      <td className="hidden md:table-cell" style={{ padding: "14px 20px", fontSize: 13, color: "#94a3b8", verticalAlign: "middle" as const, whiteSpace: "nowrap" as const }}>{user.email ?? "—"}</td>
                       <td style={{ padding: "14px 20px", fontSize: 13, verticalAlign: "middle" as const, whiteSpace: "nowrap" as const }}>
                         <span style={{ borderRadius: 6, padding: "2px 10px", fontSize: 12, fontWeight: 600, textTransform: "capitalize" as const, display: "inline-block", background: user.role === "admin" ? "#7c3aed22" : "#1e293b", color: user.role === "admin" ? "#a78bfa" : "#64748b", border: user.role === "admin" ? "1px solid #7c3aed55" : "1px solid #334155" }}>
                           {user.role}
                         </span>
                       </td>
-                      <td style={{ padding: "14px 20px", fontSize: 13, color: "#64748b", verticalAlign: "middle" as const, whiteSpace: "nowrap" as const }}>{user.currentLocation ?? "—"}</td>
-                      <td style={{ padding: "14px 20px", fontSize: 13, color: "#64748b", verticalAlign: "middle" as const, whiteSpace: "nowrap" as const }}>
+                      <td className="hidden lg:table-cell" style={{ padding: "14px 20px", fontSize: 13, color: "#64748b", verticalAlign: "middle" as const, whiteSpace: "nowrap" as const }}>{user.currentLocation ?? "—"}</td>
+                      <td className="hidden lg:table-cell" style={{ padding: "14px 20px", fontSize: 13, color: "#64748b", verticalAlign: "middle" as const, whiteSpace: "nowrap" as const }}>
                         {user.createdAt ? new Date(user.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "—"}
                       </td>
                       <td style={{ padding: "14px 20px", fontSize: 13, verticalAlign: "middle" as const, whiteSpace: "nowrap" as const }}>
@@ -399,7 +403,7 @@ const AdminDashboard = () => {
           <div style={{ background: "#0f0f1e", border: "1px solid #1e1e3a", borderRadius: 16, overflow: "hidden" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "20px 24px", borderBottom: "1px solid #1e1e3a", gap: 12, flexWrap: "wrap" as const }}>
               <h2 style={{ color: "#f1f5f9", fontSize: 18, fontWeight: 700, margin: 0 }}>Applications <span style={{ color: "#6366f1", fontSize: 16 }}>({appTotal})</span></h2>
-              <input id="admin-app-search" style={{ background: "#1a1a2e", border: "1px solid #2d2d4e", borderRadius: 8, color: "#e2e8f0", padding: "8px 14px", fontSize: 13, outline: "none", width: 260 }} placeholder="Search company or position…" value={appSearch} onChange={(e) => setAppSearch(e.target.value)} />
+              <input id="admin-app-search" className="w-full min-w-0 sm:w-64" style={{ background: "#1a1a2e", border: "1px solid #2d2d4e", borderRadius: 8, color: "#e2e8f0", padding: "8px 14px", fontSize: 13, outline: "none" }} placeholder="Search company or position…" value={appSearch} onChange={(e) => setAppSearch(e.target.value)} />
             </div>
             <div style={{ overflowX: "auto" as const }}>
               <table style={{ width: "100%", borderCollapse: "collapse" as const }}>

@@ -11,10 +11,10 @@ export default function RootLayout({
   return (
     <ProtectedRoute>
       <RoleGuard allowedRoles={["user", "admin"]}>
-        <div className="dark flex min-h-screen w-full bg-[#0a0a0a]">
+        <div className="dark flex min-h-screen w-full flex-col bg-[#0a0a0a] lg:flex-row">
           <DashboardSidebar />
           <ProfileCompletionProvider>
-            <main className="flex-1 overflow-y-auto">{children}</main>
+            <main className="min-w-0 flex-1 lg:overflow-y-auto">{children}</main>
           </ProfileCompletionProvider>
           <Toaster position="top-center" richColors />
         </div>

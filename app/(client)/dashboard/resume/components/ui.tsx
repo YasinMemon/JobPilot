@@ -259,7 +259,7 @@ export function Modal({
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className="relative z-10 w-full max-w-sm rounded-2xl border border-[#27272a] bg-[#111111] p-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200"
+        className="relative z-10 max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-y-auto rounded-2xl border border-[#27272a] bg-[#111111] p-5 shadow-2xl sm:p-6 animate-in fade-in zoom-in-95 duration-200"
       >
         <h3 className="mb-3 text-[15px] font-bold text-white">{title}</h3>
         {children}

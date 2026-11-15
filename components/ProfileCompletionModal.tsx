@@ -211,7 +211,7 @@ export default function ProfileCompletionModal({
         className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
       >
         <div
-          className="relative w-full max-w-md animate-in fade-in zoom-in-95 duration-300 rounded-3xl border border-[#2e2e32] bg-[#111111] shadow-2xl shadow-black/60 overflow-hidden"
+          className="relative max-h-[calc(100dvh-2rem)] w-full max-w-md animate-in fade-in zoom-in-95 duration-300 rounded-3xl border border-[#2e2e32] bg-[#111111] shadow-2xl shadow-black/60 overflow-y-auto"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Top gradient accent */}

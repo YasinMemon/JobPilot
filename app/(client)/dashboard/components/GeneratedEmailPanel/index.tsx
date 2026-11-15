@@ -80,7 +80,7 @@ export function GeneratedEmailPanel({
     <div className="rounded-2xl border border-[#27272a] bg-[#111111] flex flex-col h-full">
       {/* ── Header ───────────────────────────────────────────────────────── */}
       <div className="border-b border-[#27272a] px-5 py-3.5 shrink-0">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <MessageSquare className="h-4 w-4 text-zinc-500" />
             <h2 className="text-[14px] font-semibold text-white">
@@ -94,7 +94,7 @@ export function GeneratedEmailPanel({
           </div>
 
           {/* Header action buttons */}
-          <div className="flex items-center gap-1.5">
+          <div className="flex flex-wrap items-center gap-1.5">
             <button
               onClick={handleCopy}
               disabled={!hasContent}

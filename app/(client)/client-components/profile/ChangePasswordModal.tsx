@@ -96,7 +96,7 @@ export default function ChangePasswordModal({
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
 
       {/* Modal panel */}
-      <div className="relative z-10 w-full max-w-md mx-4 rounded-2xl border border-[#27272a] bg-[#111111] shadow-2xl shadow-black/60 animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative z-10 mx-4 max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto rounded-2xl border border-[#27272a] bg-[#111111] shadow-2xl shadow-black/60 animate-in fade-in zoom-in-95 duration-200">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-[#27272a] px-6 py-5">
           <div className="flex items-center gap-3">
