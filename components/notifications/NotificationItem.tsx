@@ -6,6 +6,7 @@ import {
   BriefcaseBusiness,
   CalendarClock,
   CalendarPlus,
+  MailQuestionMark,
   Megaphone,
   RefreshCw,
   ShieldAlert,
@@ -13,6 +14,7 @@ import {
   Trash2,
   type LucideIcon,
 } from "lucide-react";
+import { FollowUpNotificationActions } from "@/components/follow-ups/FollowUpNotificationActions";
 import { formatRelativeDate } from "@/lib/serializers/application.serializer";
 import type {
   Notification,
@@ -42,6 +44,11 @@ const TYPE_META: Record<
     icon: CalendarClock,
     label: "Reminder",
     tone: "bg-amber-500/10 text-amber-400 border-amber-500/20",
+  },
+  follow_up_reminder: {
+    icon: MailQuestionMark,
+    label: "Follow-up",
+    tone: "bg-orange-500/10 text-orange-400 border-orange-500/20",
   },
   job_match: {
     icon: Sparkles,
@@ -89,7 +96,7 @@ export const NotificationItem = React.memo(function NotificationItem({
 
   return (
     <li
-      className={`group relative flex items-start gap-3 border-b border-[#1f1f23] transition-colors last:border-b-0 hover:bg-[#161618] ${
+      className={`group relative flex flex-wrap items-start gap-3 border-b border-[#1f1f23] transition-colors last:border-b-0 hover:bg-[#161618] ${
         compact ? "px-3 py-3" : "px-4 py-4 sm:px-5"
       } ${n.isRead ? "" : "bg-indigo-500/[0.04]"}`}
     >
@@ -150,6 +157,14 @@ export const NotificationItem = React.memo(function NotificationItem({
       >
         <Trash2 className="h-4 w-4" />
       </button>
+
+      {n.type === "follow_up_reminder" &&
+        typeof n.metadata?.trackedEmailId === "string" && (
+          <FollowUpNotificationActions
+            trackedEmailId={n.metadata.trackedEmailId}
+            onDraft={() => onOpen(n)}
+          />
+        )}
     </li>
   );
 });

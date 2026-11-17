@@ -13,10 +13,61 @@ import {
   FileSpreadsheet,
   Loader2,
   CalendarClock,
+  MailQuestionMark,
 } from "lucide-react";
 import { Application, ApplicationStatus } from "@/types/applications/type";
 import { useUpdateStatus } from "@/app/hooks/useUpdateStatus";
 import { useUpdateApplication } from "@/app/hooks/useUpdateApplication";
+import { useApplicationFollowUps } from "@/app/hooks/useFollowUps";
+import { FollowUpCard } from "@/components/follow-ups/FollowUpCard";
+import { FollowUpComposer } from "@/components/follow-ups/FollowUpComposer";
+import type { SerializedTrackedEmail } from "@/types/followups/type";
+
+// ── Smart follow-ups for this application ───────────────────────────────────
+function FollowUpSection({ applicationId }: { applicationId: string }) {
+  const { data, isPending, isError, refetch } = useApplicationFollowUps(applicationId);
+  const [composer, setComposer] = useState<SerializedTrackedEmail | null>(null);
+  const items = data?.data ?? [];
+
+  return (
+    <div className="border-b border-[#27272a] px-5 py-4">
+      <div className="mb-3 flex items-center gap-2">
+        <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-orange-500/10">
+          <MailQuestionMark className="h-3.5 w-3.5 text-orange-400" />
+        </div>
+        <h3 className="text-[12px] font-semibold uppercase tracking-wide text-white">
+          Smart Follow-up
+        </h3>
+      </div>
+
+      {isPending ? (
+        <div className="h-24 animate-pulse rounded-2xl border border-[#27272a] bg-[#0f0f10]" aria-busy="true" />
+      ) : isError ? (
+        <p className="text-[12px] text-zinc-500">
+          Could not load follow-ups.{" "}
+          <button type="button" onClick={() => refetch()} className="text-blue-400 hover:text-blue-300">
+            Retry
+          </button>
+        </p>
+      ) : items.length === 0 ? (
+        <p className="text-[12px] leading-relaxed text-zinc-500">
+          No tracked email for this application. Emails sent through JobPilot are tracked
+          automatically, and you will be reminded after 10 days without a reply.
+        </p>
+      ) : (
+        <ul className="space-y-3">
+          {items.map((e) => (
+            <FollowUpCard key={e.id} email={e} onOpenComposer={setComposer} />
+          ))}
+        </ul>
+      )}
+
+      {composer && (
+        <FollowUpComposer key={composer.id} email={composer} onClose={() => setComposer(null)} />
+      )}
+    </div>
+  );
+}
 
 // ── Status badge (inline) ─────────────────────────────────────────────────────
 function StatusBadge({ status }: { status: ApplicationStatus }) {
@@ -300,6 +351,8 @@ export default function ApplicationDrawer({
               </div>
 
               <InterviewSection key={application.id} application={application} />
+
+              <FollowUpSection key={`fu-${application.id}`} applicationId={application.id} />
 
               {/* AI Summary */}
               <div className="border-b border-[#27272a] px-5 py-4">

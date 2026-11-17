@@ -1,7 +1,9 @@
 "use client";
 
-import { Mail, MapPin, ArrowRight, Calendar } from "lucide-react";
+import { Mail, MapPin, ArrowRight, Calendar, MailQuestionMark } from "lucide-react";
 import { Application, ApplicationStatus } from "@/types/applications/type";
+import { followUpBadge } from "@/components/follow-ups/status";
+import type { SerializedTrackedEmail } from "@/types/followups/type";
 
 // ── Status badge ──────────────────────────────────────────────────────────────
 function StatusBadge({ status }: { status: ApplicationStatus }) {
@@ -93,12 +95,16 @@ function CompanyAvatar({ company }: { company: string }) {
 interface ApplicationCardProps {
   application: Application;
   onViewDetails: (application: Application) => void;
+  /** Most relevant tracked email for this application (Smart Follow-ups). */
+  followUp?: SerializedTrackedEmail;
 }
 
 export default function ApplicationCard({
   application,
   onViewDetails,
+  followUp,
 }: ApplicationCardProps) {
+  const badge = followUp ? followUpBadge(followUp) : null;
   return (
     <div className="group relative rounded-2xl border border-[#27272a] bg-[#111111] p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-[#3f3f46] hover:shadow-xl hover:shadow-black/40">
       {/* Top row */}
@@ -139,6 +145,18 @@ export default function ApplicationCard({
           {application.snippet}
         </p>
       </div>
+
+      {badge && (
+        <button
+          type="button"
+          onClick={() => onViewDetails(application)}
+          title="Open follow-up details"
+          className={`mt-3 inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-semibold ${badge.tone}`}
+        >
+          <MailQuestionMark className="h-3 w-3" />
+          {badge.label}
+        </button>
+      )}
 
       {/* Bottom row */}
       <div className="mt-4 flex items-center justify-between">

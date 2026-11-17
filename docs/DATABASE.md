@@ -21,3 +21,9 @@
 - **Key Fields:** `userId`, `type`, `title`, `message`, `link`, `metadata`, `isRead`, `readAt`, `dedupeKey`
 - **Indexes:** `{userId,_id:-1}`, `{userId,isRead,_id:-1}`, unique partial `{userId,dedupeKey}` (duplicate prevention), TTL on `createdAt` (180 days).
 - **Also:** `Application.interviewAt` (optional) drives interview notifications and reminders.
+
+## TrackedEmail
+- **Purpose:** Smart Follow-ups. One record per email successfully sent through JobPilot.
+- **Key Fields:** `userId`, `applicationId`, `recipientEmail`, `recipientName`, `monitoredAddresses`, `subject`, `originalBody`, `gmailMessageId`, `gmailThreadId`, `sentAt`, `status`, `nextFollowUpAt`, `reminderCycle`, `draft`, `followUpCount`, `followUpHistory[]`, `replyReceivedAt`, `lastCheckedAt`, `lockedUntil`.
+- **Indexes:** unique `{userId,gmailMessageId}` (duplicate prevention), `{userId,status,sentAt:-1}`, `{gmailThreadId}`, `{status,nextFollowUpAt}` (scheduler), `{userId,applicationId}`.
+- **Notification type added:** `follow_up_reminder`.
