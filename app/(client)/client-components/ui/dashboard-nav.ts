@@ -7,6 +7,7 @@ import {
   Settings,
   Bell,
   FileText,
+  MailQuestionMark,
 } from "lucide-react";
 
 export const dashboardNav = [
@@ -34,6 +35,11 @@ export const dashboardNav = [
     title: "Resume Generator",
     href: "/dashboard/resume",
     icon: FileText,
+  },
+  {
+    title: "Smart Follow-ups",
+    href: "/dashboard/follow-ups",
+    icon: MailQuestionMark,
   },
   {
     title: "Notifications",

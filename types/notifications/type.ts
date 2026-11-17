@@ -7,6 +7,7 @@ export const NOTIFICATION_TYPES = [
   "application_status_changed",
   "interview_scheduled",
   "interview_reminder",
+  "follow_up_reminder",
   "job_match",
   "security",
   "announcement",

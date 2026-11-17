@@ -2,6 +2,7 @@ import clientPromise from "@/lib/mongodb";
 import { auth } from "@/lib/auth";
 import ConnectDB from "@/lib/db";
 import ApplicationModel from "@/models/applications";
+import { trackSentEmail } from "@/services/followup.service";
 import { parseEmailWithAI } from "@/services/parser.service";
 import { ApplicationStatus } from "@/types/applications/type";
 import { ObjectId } from "mongodb";
@@ -160,6 +161,10 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    // Gmail has confirmed the send; this is the real sent time.
+    const sentAt = new Date();
+    let applicationId: mongoose.Types.ObjectId | null = null;
+
     // ── Save Application record ───────────────────────────────────────────────
     try {
       await ConnectDB();
@@ -227,8 +232,35 @@ export async function POST(req: NextRequest) {
         },
         { upsert: true },
       );
+
+      const savedApp = await ApplicationModel.findOne(
+        { userId: userObjectId, gmailMessageId },
+        { _id: 1 },
+      ).lean();
+      applicationId = savedApp ? (savedApp._id as mongoose.Types.ObjectId) : null;
     } catch (dbErr) {
       console.error("[send-email] Failed to save application record:", dbErr);
+    }
+
+    // ── Smart Follow-ups: track this JobPilot-sent email ──────────────────────
+    // Only reached after Gmail confirmed the send. A tracking failure must
+    // never turn a delivered email into an error response.
+    try {
+      await trackSentEmail({
+        userId,
+        applicationId,
+        to,
+        cc,
+        bcc,
+        senderEmail,
+        subject,
+        html,
+        gmailMessageId,
+        gmailThreadId: threadId,
+        sentAt,
+      });
+    } catch (trackErr) {
+      console.error("[send-email] Failed to track email for follow-ups:", trackErr);
     }
 
     return NextResponse.json(

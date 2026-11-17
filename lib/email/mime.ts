@@ -14,6 +14,9 @@ export interface ComposeEmailOptions {
   subject: string;
   html: string;
   attachments?: EmailAttachment[];
+  /** RFC 5322 Message-ID of the message being replied to (threading). */
+  inReplyTo?: string;
+  references?: string;
 }
 
 const DEFAULT_SUBJECT = "Job Application";
@@ -82,6 +85,8 @@ export async function composeRawEmail(opts: ComposeEmailOptions): Promise<string
     cc: opts.cc,
     bcc: opts.bcc,
     subject: buildSubject(opts.subject),
+    inReplyTo: opts.inReplyTo,
+    references: opts.references,
     text: htmlToPlainText(opts.html),
     html: `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="font-family:Arial,sans-serif;font-size:14px;color:#1a1a1a;line-height:1.6;">${opts.html}</body></html>`,
     textEncoding: "quoted-printable",

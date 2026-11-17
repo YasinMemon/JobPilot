@@ -1,6 +1,6 @@
-import { timingSafeEqual } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import ConnectDB from "@/lib/db";
+import { isCronAuthorized } from "@/lib/cron/auth";
 import ApplicationModel from "@/models/applications";
 import { ApplicationStatus } from "@/types/applications/type";
 import {
@@ -13,16 +13,6 @@ export const dynamic = "force-dynamic";
 
 const HOUR = 60 * 60 * 1000;
 const BATCH_LIMIT = 1000;
-
-function isAuthorized(req: NextRequest): boolean {
-  const secret = process.env.CRON_SECRET;
-  if (!secret) return false; // fail closed when not configured
-
-  const header = req.headers.get("authorization") ?? "";
-  const expected = Buffer.from(`Bearer ${secret}`);
-  const actual = Buffer.from(header);
-  return actual.length === expected.length && timingSafeEqual(actual, expected);
-}
 
 /**
  * GET /api/cron/interview-reminders
@@ -39,7 +29,7 @@ function isAuthorized(req: NextRequest): boolean {
  * notify twice.
  */
 export async function GET(req: NextRequest) {
-  if (!isAuthorized(req)) {
+  if (!isCronAuthorized(req)) {
     return NextResponse.json(
       { success: false, message: "Unauthorized" },
       { status: 401 },
