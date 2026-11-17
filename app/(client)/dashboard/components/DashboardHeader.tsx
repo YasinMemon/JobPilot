@@ -3,7 +3,6 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Bell } from "lucide-react";
 import type { UseUserProfileReturn } from "../hooks/useUserProfile";
 import { ROUTES } from "../constants";
 
@@ -49,13 +48,6 @@ export const DashboardHeader = React.memo(function DashboardHeader({
       </div>
 
       <div className="flex items-center gap-2.5">
-        <button
-          aria-label="Notifications"
-          className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-[#27272a] bg-[#111111] text-zinc-500 transition-all duration-200 hover:border-[#3f3f46] hover:text-zinc-200"
-        >
-          <Bell className="h-4 w-4" />
-          <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500" />
-        </button>
         <Link
           href={ROUTES.PROFILE}
           aria-label="Profile"

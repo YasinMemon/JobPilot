@@ -5,6 +5,7 @@ import { serializeApplication } from "@/lib/serializers/application.serializer";
 import { ApplicationStatus } from "@/types/applications/type";
 import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
+import { notifyApplicationStatusChanged } from "@/lib/notifications/triggers";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -50,14 +51,37 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
 
     await ConnectDB();
 
-    const updated = await ApplicationModel.findOneAndUpdate(
-      {
-        _id: id,
-        userId: new mongoose.Types.ObjectId(session.user.id),
-      },
+    const userObjectId = new mongoose.Types.ObjectId(session.user.id);
+
+    // Atomically read the previous status while applying the new one, so a
+    // notification is only emitted for a real transition (no-op updates and
+    // concurrent duplicate requests produce none).
+    const previous = await ApplicationModel.findOneAndUpdate(
+      { _id: id, userId: userObjectId },
       { $set: { status } },
-      { new: true },
+      { new: false, projection: { status: 1, company: 1, position: 1 } },
     ).lean();
+
+    if (!previous) {
+      return NextResponse.json(
+        { success: false, message: "Application not found" },
+        { status: 404 },
+      );
+    }
+
+    if (previous.status !== status) {
+      await notifyApplicationStatusChanged(
+        userObjectId,
+        { id, company: previous.company, position: previous.position },
+        previous.status,
+        status,
+      );
+    }
+
+    const updated = await ApplicationModel.findOne({
+      _id: id,
+      userId: userObjectId,
+    }).lean();
 
     if (!updated) {
       return NextResponse.json(

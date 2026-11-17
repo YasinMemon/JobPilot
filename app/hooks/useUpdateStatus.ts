@@ -84,6 +84,7 @@ export function useUpdateStatus() {
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["applications"] });
       queryClient.invalidateQueries({ queryKey: ["applicationStats"] });
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
   });
 }

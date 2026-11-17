@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   X,
   Mail,
@@ -12,9 +12,11 @@ import {
   FileText,
   FileSpreadsheet,
   Loader2,
+  CalendarClock,
 } from "lucide-react";
 import { Application, ApplicationStatus } from "@/types/applications/type";
 import { useUpdateStatus } from "@/app/hooks/useUpdateStatus";
+import { useUpdateApplication } from "@/app/hooks/useUpdateApplication";
 
 // ── Status badge (inline) ─────────────────────────────────────────────────────
 function StatusBadge({ status }: { status: ApplicationStatus }) {
@@ -103,6 +105,83 @@ function AttachmentIcon({ type }: { type: string }) {
   if (type === "xlsx" || type === "xls" || type === "csv")
     return <FileSpreadsheet className="h-4 w-4 text-emerald-400" />;
   return <FileText className="h-4 w-4 text-blue-400" />;
+}
+
+// ── Interview scheduler ───────────────────────────────────────────────────────
+/** ISO string → value accepted by <input type="datetime-local"> (local time). */
+function toLocalInputValue(iso?: string | null): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+function InterviewSection({ application }: { application: Application }) {
+  const { mutate, isPending } = useUpdateApplication();
+  const [value, setValue] = useState(toLocalInputValue(application.interviewAt));
+  const [error, setError] = useState<string | null>(null);
+  // The drawer receives a snapshot of the application, so track what was saved.
+  const [saved, setSaved] = useState<string | null>(application.interviewAt ?? null);
+
+  const save = (next: string) => {
+    setError(null);
+    const iso = next ? new Date(next).toISOString() : null;
+    mutate(
+      { id: application.id, data: { interviewAt: iso } },
+      {
+        onSuccess: () => setSaved(iso),
+        onError: () => setError("Couldn't save the interview time."),
+      },
+    );
+  };
+
+  return (
+    <div className="border-b border-[#27272a] px-5 py-4">
+      <div className="mb-3 flex items-center gap-2">
+        <CalendarClock className="h-3.5 w-3.5 text-zinc-600" />
+        <h3 className="text-[12px] font-semibold uppercase tracking-wide text-white">
+          Interview
+        </h3>
+      </div>
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <input
+          type="datetime-local"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          aria-label="Interview date and time"
+          className="min-w-0 flex-1 rounded-xl border border-[#27272a] bg-[#111111] px-3 py-2 text-[12px] text-zinc-200 [color-scheme:dark] focus:border-blue-500/40 focus:outline-none"
+        />
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => save(value)}
+            disabled={isPending || !value}
+            className="flex-1 rounded-xl border border-[#27272a] bg-gradient-to-r from-blue-600/20 to-purple-600/20 px-4 py-2 text-[12px] font-semibold text-white transition-all hover:from-blue-500/30 hover:to-purple-500/30 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {isPending ? "Saving…" : "Save"}
+          </button>
+          {saved && (
+            <button
+              type="button"
+              onClick={() => {
+                setValue("");
+                save("");
+              }}
+              disabled={isPending}
+              className="rounded-xl border border-[#27272a] px-3 py-2 text-[12px] text-zinc-400 transition-colors hover:text-zinc-200 disabled:opacity-50"
+            >
+              Clear
+            </button>
+          )}
+        </div>
+      </div>
+      <p className="mt-2 text-[11px] text-zinc-600">
+        You&apos;ll get a notification now and reminders before the interview.
+      </p>
+      {error && <p className="mt-1 text-[11px] text-red-400">{error}</p>}
+    </div>
+  );
 }
 
 // ── Drawer ────────────────────────────────────────────────────────────────────
@@ -219,6 +298,8 @@ export default function ApplicationDrawer({
                   </div>
                 )}
               </div>
+
+              <InterviewSection key={application.id} application={application} />
 
               {/* AI Summary */}
               <div className="border-b border-[#27272a] px-5 py-4">

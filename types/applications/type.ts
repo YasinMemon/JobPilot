@@ -67,6 +67,8 @@ export interface IApplication extends Document {
 
   // Dates
   applicationDate?: Date;
+  /** When the user's interview for this application takes place. */
+  interviewAt?: Date | null;
   receivedAt: Date;
 
   // Mongoose timestamps
@@ -126,6 +128,7 @@ export interface Application {
   // Dates (formatted strings for display)
   date: string; // human-readable relative date
   applicationDate?: string;
+  interviewAt?: string | null;
   receivedAt: string;
   createdAt: string;
   updatedAt: string;

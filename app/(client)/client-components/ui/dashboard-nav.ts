@@ -35,11 +35,11 @@ export const dashboardNav = [
     href: "/dashboard/resume",
     icon: FileText,
   },
-  // {
-  //   title: "Notifications",
-  //   href: "/dashboard/notifications",
-  //   icon: Bell,
-  // },
+  {
+    title: "Notifications",
+    href: "/dashboard/notifications",
+    icon: Bell,
+  },
   {
     title: "Profile",
     href: "/dashboard/profile",

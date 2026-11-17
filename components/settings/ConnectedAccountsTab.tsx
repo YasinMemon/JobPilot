@@ -130,10 +130,10 @@ export default function ConnectedAccountsTab() {
 
         <div className="p-5">
           {/* Card header */}
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
             <div className="flex items-center gap-3">
               {/* Google icon */}
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#27272a] bg-[#1a1a1a]">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#27272a] bg-[#1a1a1a]">
                 <svg viewBox="0 0 24 24" className="h-5 w-5">
                   <path
                     fill="#4285F4"

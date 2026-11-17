@@ -6,7 +6,7 @@ import { Application, ApplicationResponse } from "@/types/applications/type";
 
 interface UpdateApplicationVariables {
   id: string;
-  data: Partial<Pick<Application, "notes" | "labels" | "appliedVia" | "platform" | "companyLogo">>;
+  data: Partial<Pick<Application, "notes" | "labels" | "appliedVia" | "platform" | "companyLogo" | "interviewAt">>;
 }
 
 /**
@@ -63,6 +63,7 @@ export function useUpdateApplication() {
     onSettled: (_data, _err, variables) => {
       queryClient.invalidateQueries({ queryKey: ["applications"] });
       queryClient.invalidateQueries({ queryKey: ["application", variables.id] });
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
   });
 }

@@ -20,6 +20,7 @@ export function useSyncApplications() {
       // Invalidate and refetch applications list + stats
       queryClient.invalidateQueries({ queryKey: ["applications"] });
       queryClient.invalidateQueries({ queryKey: ["applicationStats"] });
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
   });
 }

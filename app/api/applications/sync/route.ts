@@ -6,6 +6,7 @@ import ApplicationModel from "@/models/applications";
 import { fetchJobEmails } from "@/services/gmail.service";
 import { parseEmailWithAI } from "@/services/parser.service";
 import mongoose from "mongoose";
+import { notifyApplicationsImported } from "@/lib/notifications/triggers";
 
 /**
  * POST /api/applications/sync
@@ -179,21 +180,34 @@ export async function POST(req: NextRequest) {
 
     // ── Bulk insert (skip duplicates with ordered: false) ────────────────────
     let imported = 0;
+    let insertedApps: { gmailMessageId: string; company?: string; position?: string }[] = [];
     if (docsToInsert.length > 0) {
       try {
         const insertResult = await ApplicationModel.insertMany(docsToInsert, {
           ordered: false, // Continue on duplicate key errors
         });
         imported = insertResult.length;
+        insertedApps = insertResult.map((d) => ({
+          gmailMessageId: d.gmailMessageId,
+          company: d.company,
+          position: d.position,
+        }));
       } catch (err: unknown) {
         // BulkWriteError — some docs may have been inserted
-        const bulkErr = err as { insertedDocs?: unknown[]; writeErrors?: unknown[] };
+        const bulkErr = err as {
+          insertedDocs?: { gmailMessageId: string; company?: string; position?: string }[];
+          writeErrors?: unknown[];
+        };
         imported = bulkErr.insertedDocs?.length ?? 0;
+        insertedApps = bulkErr.insertedDocs ?? [];
         console.warn(
           `[sync] BulkWrite partial: ${imported} inserted, ${bulkErr.writeErrors?.length ?? 0} duplicates skipped`,
         );
       }
     }
+
+    // Only applications that were actually inserted trigger a notification.
+    await notifyApplicationsImported(userId, insertedApps);
 
     return NextResponse.json({
       success: true,
