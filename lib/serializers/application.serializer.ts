@@ -92,6 +92,7 @@ export function serializeApplication(doc: IApplication): Application {
     // Dates
     date: formatRelativeDate(d.receivedAt),
     applicationDate: d.applicationDate ? d.applicationDate.toISOString() : undefined,
+    interviewAt: d.interviewAt ? new Date(d.interviewAt).toISOString() : null,
     receivedAt: d.receivedAt.toISOString(),
     createdAt: d.createdAt.toISOString(),
     updatedAt: d.updatedAt.toISOString(),

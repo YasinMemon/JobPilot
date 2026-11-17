@@ -4,6 +4,7 @@ import ApplicationModel from "@/models/applications";
 import { serializeApplication } from "@/lib/serializers/application.serializer";
 import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
+import { notifyInterviewScheduled } from "@/lib/notifications/triggers";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -65,7 +66,8 @@ export async function GET(req: NextRequest, context: RouteContext) {
 
 /**
  * PATCH /api/applications/:id
- * Updates editable fields: notes, labels, appliedVia, platform.
+ * Updates editable fields: notes, labels, appliedVia, platform, companyLogo
+ * and interviewAt (ISO date string, or null to clear).
  * Does NOT update status (use the /status sub-route).
  */
 export async function PATCH(req: NextRequest, context: RouteContext) {
@@ -99,6 +101,27 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
       }
     }
 
+    // Interview time: validated separately (Date | null).
+    let newInterviewAt: Date | null | undefined;
+    if ("interviewAt" in body) {
+      if (body.interviewAt === null || body.interviewAt === "") {
+        newInterviewAt = null;
+      } else {
+        const parsed = new Date(body.interviewAt);
+        if (
+          typeof body.interviewAt !== "string" ||
+          Number.isNaN(parsed.getTime())
+        ) {
+          return NextResponse.json(
+            { success: false, message: "Invalid interviewAt date" },
+            { status: 400 },
+          );
+        }
+        newInterviewAt = parsed;
+      }
+      allowedUpdates.interviewAt = newInterviewAt;
+    }
+
     if (Object.keys(allowedUpdates).length === 0) {
       return NextResponse.json(
         { success: false, message: "No valid fields to update" },
@@ -108,14 +131,42 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
 
     await ConnectDB();
 
-    const updated = await ApplicationModel.findOneAndUpdate(
-      {
-        _id: id,
-        userId: new mongoose.Types.ObjectId(session.user.id),
-      },
+    const userObjectId = new mongoose.Types.ObjectId(session.user.id);
+
+    const previous = await ApplicationModel.findOneAndUpdate(
+      { _id: id, userId: userObjectId },
       { $set: allowedUpdates },
-      { new: true },
+      {
+        new: false,
+        projection: { interviewAt: 1, company: 1, position: 1 },
+      },
     ).lean();
+
+    if (!previous) {
+      return NextResponse.json(
+        { success: false, message: "Application not found" },
+        { status: 404 },
+      );
+    }
+
+    // Notify only when an upcoming interview time was actually set or changed.
+    if (
+      newInterviewAt &&
+      newInterviewAt.getTime() > Date.now() &&
+      previous.interviewAt?.getTime() !== newInterviewAt.getTime()
+    ) {
+      await notifyInterviewScheduled(
+        userObjectId,
+        { id, company: previous.company, position: previous.position },
+        newInterviewAt,
+        Boolean(previous.interviewAt),
+      );
+    }
+
+    const updated = await ApplicationModel.findOne({
+      _id: id,
+      userId: userObjectId,
+    }).lean();
 
     if (!updated) {
       return NextResponse.json(

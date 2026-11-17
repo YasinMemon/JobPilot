@@ -10,6 +10,7 @@ import { Zap, LogOut, Loader2, Menu, X } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { buildCloudinaryUrl } from "@/lib/cloudinaryUrl";
+import NotificationBell from "@/components/notifications/NotificationBell";
 
 /** Resolve the best avatar URL for the sidebar, applying Cloudinary face-crop */
 function resolveAvatar(
@@ -125,16 +126,19 @@ export default function DashboardSidebar() {
             Job<span className="gradient-text">Pilot</span>
           </span>
         </Link>
-        <button
-          type="button"
-          onClick={() => setMobileOpen(true)}
-          aria-label="Open navigation menu"
-          aria-expanded={mobileOpen}
-          aria-controls="dashboard-sidebar"
-          className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#27272a] bg-[#111111] text-zinc-300 transition-colors hover:text-white"
-        >
-          <Menu className="h-5 w-5" />
-        </button>
+        <div className="flex items-center gap-2">
+          <NotificationBell />
+          <button
+            type="button"
+            onClick={() => setMobileOpen(true)}
+            aria-label="Open navigation menu"
+            aria-expanded={mobileOpen}
+            aria-controls="dashboard-sidebar"
+            className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#27272a] bg-[#111111] text-zinc-300 transition-colors hover:text-white"
+          >
+            <Menu className="h-5 w-5" />
+          </button>
+        </div>
       </header>
 
       {/* ── Mobile backdrop ── */}
@@ -162,6 +166,10 @@ export default function DashboardSidebar() {
         >
           <X className="h-5 w-5" />
         </button>
+        {/* Desktop notification bell (mobile/tablet has it in the top bar) */}
+        <div className="absolute right-4 top-5 hidden lg:block">
+          <NotificationBell />
+        </div>
         <Link href="/dashboard" className="flex items-center gap-2.5 group">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg shadow-purple-900/30 group-hover:shadow-purple-700/40 transition-shadow duration-300">
             <Zap className="h-4 w-4 text-white" strokeWidth={2.5} />

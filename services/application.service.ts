@@ -80,7 +80,7 @@ export async function getStats(): Promise<{
  */
 export async function updateApplication(
   id: string,
-  data: Partial<Pick<Application, "notes" | "labels" | "appliedVia" | "platform" | "companyLogo">>,
+  data: Partial<Pick<Application, "notes" | "labels" | "appliedVia" | "platform" | "companyLogo" | "interviewAt">>,
 ): Promise<{ success: boolean; data: Application }> {
   const res = await api.patch<{ success: boolean; data: Application }>(
     `/applications/${id}`,

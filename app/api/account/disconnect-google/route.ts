@@ -1,5 +1,6 @@
 import { auth } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
+import { notifySecurityEvent } from "@/lib/notifications/triggers";
 
 /**
  * POST /api/account/disconnect-google
@@ -75,6 +76,8 @@ export async function POST(req: NextRequest) {
       body: { providerId: "google" },
       headers: req.headers,
     });
+
+    await notifySecurityEvent(session.user.id, "google_disconnected");
 
     return NextResponse.json({
       success: true,

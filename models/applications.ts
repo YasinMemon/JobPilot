@@ -157,6 +157,11 @@ const ApplicationSchema = new Schema<IApplication>(
       type: Date,
     },
 
+    interviewAt: {
+      type: Date,
+      default: null,
+    },
+
     receivedAt: {
       type: Date,
       required: true,
@@ -180,6 +185,18 @@ ApplicationSchema.index(
   },
   {
     unique: true,
+  },
+);
+
+/**
+ * Lets the reminder job find upcoming interviews without a collection scan.
+ * Partial: only applications that actually have an interview scheduled.
+ */
+ApplicationSchema.index(
+  { interviewAt: 1 },
+  {
+    name: "application_interview_upcoming",
+    partialFilterExpression: { interviewAt: { $type: "date" } },
   },
 );
 

@@ -157,7 +157,7 @@ export default function ProfileSidebar({
         </div>
       </div>
 
-      <div className="mt-4 flex items-center gap-2">
+      <div className="mt-4 flex flex-wrap items-center gap-2">
         {isEditing ? (
           <Button onClick={() => setIsEditing(false)} variant="outline">
             Cancel
