@@ -9,7 +9,7 @@ import {
   sleep,
 } from "@/lib/gmail/userClient";
 import { checkThreadForReply } from "@/lib/followups/replyDetection";
-import { createNotification } from "@/services/notification.service";
+import { createNotification, deleteNotificationByDedupeKey } from "@/services/notification.service";
 import { DAY_MS, markReplied, reminderDedupeKey } from "@/services/followup.service";
 import type { IFollowUpEvent, ITrackedEmail } from "@/types/followups/type";
 
@@ -244,7 +244,14 @@ export async function runFollowUpScheduler(
           },
         },
       );
-      if (res.modifiedCount > 0) result.remindersCreated++;
+      if (res.modifiedCount > 0) {
+        result.remindersCreated++;
+      } else if (notif.created) {
+        // Lost the race (e.g. a manual check marked it replied after our Gmail
+        // check). markReplied ran before this notification existed, so remove
+        // the stale reminder ourselves.
+        await deleteNotificationByDedupeKey(doc.userId, dedupeKey).catch(() => false);
+      }
     } catch (err) {
       await fail(doc, err);
     }

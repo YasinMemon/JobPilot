@@ -10,7 +10,7 @@ import {
   MailQuestionMark,
   RefreshCw,
 } from "lucide-react";
-import { useFollowUps } from "@/app/hooks/useFollowUps";
+import { useFollowUp, useFollowUps } from "@/app/hooks/useFollowUps";
 import type { SerializedTrackedEmail } from "@/types/followups/type";
 import { FollowUpComposer } from "@/components/follow-ups/FollowUpComposer";
 import { FollowUpCard } from "@/components/follow-ups/FollowUpCard";
@@ -58,17 +58,27 @@ function FollowUpsContent() {
   const items = useMemo(() => data?.data ?? [], [data]);
   const visible = useMemo(() => items.filter((e) => matches(filter, e)), [items, filter]);
 
+  // The list is capped (default 50), so an older email linked from a
+  // notification may be missing from it — fetch that one directly.
+  const inList = items.some((e) => e.id === openId);
+  const { data: linked, isError: linkedError } = useFollowUp(
+    openId && !isPending && !inList ? openId : null,
+  );
+
   // Deep link from a notification: ?open=<id> opens the follow-up workflow.
   useEffect(() => {
     if (!openId || composer) return;
-    const target = items.find((e) => e.id === openId);
-    if (!target) return;
+    const target = items.find((e) => e.id === openId) ?? linked;
+    if (!target) {
+      if (linkedError) router.replace("/dashboard/follow-ups", { scroll: false });
+      return;
+    }
     if (["reminder_due", "draft_ready", "drafting"].includes(target.status)) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setComposer(target);
     }
     router.replace("/dashboard/follow-ups", { scroll: false });
-  }, [openId, items, composer, router]);
+  }, [openId, items, linked, linkedError, composer, router]);
 
   const summary = data?.summary;
 

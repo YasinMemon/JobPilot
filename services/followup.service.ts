@@ -888,6 +888,9 @@ export async function sendApprovedFollowUp(
         lastCheckedAt: sentAt,
       },
       ...(nextDays ? { $inc: { reminderCycle: 1 } } : {}),
+      // The approved recipient may differ from the original one; reply
+      // detection only trusts senders in this set.
+      $addToSet: { monitoredAddresses: { $each: extractEmailAddresses(clean.to) } },
       $push: {
         followUpHistory: {
           type: "follow_up_sent",
