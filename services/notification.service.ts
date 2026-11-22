@@ -306,3 +306,32 @@ export async function deleteNotification(
   });
   return result.deletedCount > 0;
 }
+
+// ─── By dedupe key (used to resolve system-generated notifications) ──────────
+
+/** Delete a notification identified by its dedupe key. Scoped to the owner. */
+export async function deleteNotificationByDedupeKey(
+  userIdInput: UserIdInput,
+  dedupeKey: string,
+): Promise<boolean> {
+  const userId = toObjectId(userIdInput);
+  if (!userId || !dedupeKey) return false;
+  await ConnectDB();
+  const result = await NotificationModel.deleteOne({ userId, dedupeKey });
+  return result.deletedCount > 0;
+}
+
+/** Mark a notification (identified by dedupe key) as read. */
+export async function markNotificationReadByDedupeKey(
+  userIdInput: UserIdInput,
+  dedupeKey: string,
+): Promise<boolean> {
+  const userId = toObjectId(userIdInput);
+  if (!userId || !dedupeKey) return false;
+  await ConnectDB();
+  const result = await NotificationModel.updateOne(
+    { userId, dedupeKey, isRead: false },
+    { $set: { isRead: true, readAt: new Date() } },
+  );
+  return result.matchedCount > 0;
+}

@@ -7,6 +7,7 @@ import {
   useMemo,
   useTransition,
 } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 
@@ -22,6 +23,8 @@ import { useApplications } from "@/app/hooks/useApplications";
 import { useApplicationStats } from "@/app/hooks/useApplicationStats";
 import { useSyncApplications } from "@/app/hooks/useSyncApplications";
 import { useDeleteApplication } from "@/app/hooks/useDeleteApplication";
+import { useFollowUps } from "@/app/hooks/useFollowUps";
+import type { SerializedTrackedEmail } from "@/types/followups/type";
 
 import {
   Application,
@@ -252,6 +255,23 @@ export default function ApplicationsPage() {
 
   const { data: statsData, isLoading: statsLoading } = useApplicationStats();
 
+  // Smart Follow-ups: one request for all tracked emails, grouped by application.
+  const { data: followUpData } = useFollowUps();
+  const followUpByApp = useMemo(() => {
+    const map = new Map<string, SerializedTrackedEmail>();
+    const needsAction = (e: SerializedTrackedEmail) =>
+      ["reminder_due", "drafting", "draft_ready"].includes(e.status);
+    for (const e of followUpData?.data ?? []) {
+      if (!e.applicationId) continue;
+      const cur = map.get(e.applicationId);
+      // Prefer an email needing action; otherwise the newest (list is newest first).
+      if (!cur || (needsAction(e) && !needsAction(cur))) map.set(e.applicationId, e);
+    }
+    return map;
+  }, [followUpData]);
+  const dueFollowUps =
+    (followUpData?.summary.dueReminders ?? 0) + (followUpData?.summary.draftsReady ?? 0);
+
   const { mutate: syncNow, isPending: isSyncing } = useSyncApplications();
 
   const { mutate: deleteApp, isPending: isDeleting } = useDeleteApplication();
@@ -337,6 +357,18 @@ export default function ApplicationsPage() {
             {/* Stats */}
             <StatsCards stats={stats} loading={statsLoading} />
 
+            {dueFollowUps > 0 && (
+              <Link
+                href="/dashboard/follow-ups"
+                className="flex items-center justify-between gap-3 rounded-2xl border border-orange-500/20 bg-orange-500/5 px-4 py-3 text-[13px] text-orange-200 transition-colors hover:bg-orange-500/10"
+              >
+                <span>
+                  {dueFollowUps} follow-up{dueFollowUps === 1 ? " is" : "s are"} waiting for your action. Open an application to draft one.
+                </span>
+                <span className="shrink-0 text-[11px] font-semibold uppercase tracking-wide">View all</span>
+              </Link>
+            )}
+
             {/* Filters */}
             <SearchFilters
               search={search}
@@ -377,6 +409,7 @@ export default function ApplicationsPage() {
                       <ApplicationCard
                         application={app}
                         onViewDetails={setSelected}
+                        followUp={followUpByApp.get(app.id)}
                       />
                       {/* Delete button — appears on card hover */}
                       <button
